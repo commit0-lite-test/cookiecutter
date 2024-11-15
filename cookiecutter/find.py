@@ -3,11 +3,10 @@
 import logging
 import os
 from pathlib import Path
-from jinja2 import Environment
 from cookiecutter.exceptions import NonTemplatedInputDirException
 
 try:
-    import jinja2
+    from jinja2 import Environment
 except ImportError:
     print("jinja2 is not installed. Please install it using 'pip install jinja2'")
     raise
