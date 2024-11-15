@@ -175,7 +175,7 @@ def main(
             template=template,
             checkout=checkout,
             no_input=no_input,
-            extra_context=extra_context,
+            extra_context=dict(extra_context),
             replay=replay,
             overwrite_if_exists=overwrite_if_exists,
             output_dir=output_dir,
