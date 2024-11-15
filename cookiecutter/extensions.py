@@ -28,11 +28,11 @@ class JsonifyExtension(Extension):
 class RandomStringExtension(Extension):
     """Jinja2 extension to create a random string."""
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         """Jinja2 Extension Constructor."""
         super().__init__(environment)
 
-        def random_ascii_string(length, punctuation=False):
+        def random_ascii_string(length: int, punctuation: bool = False) -> str:
             if punctuation:
                 corpus = "".join((string.ascii_letters, string.punctuation))
             else:
@@ -75,12 +75,12 @@ class TimeExtension(Extension):
 
     tags = {"now"}
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         """Jinja2 Extension constructor."""
         super().__init__(environment)
         environment.extend(datetime_format="%Y-%m-%d")
 
-    def parse(self, parser):
+    def parse(self, parser: Any) -> nodes.Node:
         """Parse datetime template and add datetime value."""
         lineno = next(parser.stream).lineno
         token = parser.stream.next()
@@ -93,5 +93,5 @@ class TimeExtension(Extension):
         )
         return nodes.Output([node]).set_lineno(lineno)
 
-    def _render_now(self, format_string):
+    def _render_now(self, format_string: str) -> str:
         return arrow.now().format(format_string)
