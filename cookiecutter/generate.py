@@ -89,7 +89,13 @@ def generate_context(
     return context
 
 
-def generate_file(project_dir, infile, context, env, skip_if_file_exists=False):
+def generate_file(
+    project_dir: Union[str, Path],
+    infile: str,
+    context: Dict[str, Any],
+    env: Environment,
+    skip_if_file_exists: bool = False
+) -> bool:
     """Render filename of infile as name of outfile, handle infile correctly.
 
     Dealing with infile appropriately:
