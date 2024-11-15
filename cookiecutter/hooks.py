@@ -113,7 +113,7 @@ def run_hook_from_repo_dir(
     hook_name: str,
     project_dir: str,
     context: dict,
-    delete_project_on_failure: bool
+    delete_project_on_failure: bool,
 ) -> None:
     """Run hook from repo directory, clean project directory if hook fails.
 
