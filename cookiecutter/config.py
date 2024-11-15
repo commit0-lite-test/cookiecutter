@@ -1,18 +1,31 @@
 """Global configuration handling."""
+
 import collections
 import copy
 import logging
 import os
 import yaml
 from cookiecutter.exceptions import ConfigDoesNotExistException, InvalidConfiguration
+
 logger = logging.getLogger(__name__)
-USER_CONFIG_PATH = os.path.expanduser('~/.cookiecutterrc')
-BUILTIN_ABBREVIATIONS = {'gh': 'https://github.com/{0}.git', 'gl': 'https://gitlab.com/{0}.git', 'bb': 'https://bitbucket.org/{0}'}
-DEFAULT_CONFIG = {'cookiecutters_dir': os.path.expanduser('~/.cookiecutters/'), 'replay_dir': os.path.expanduser('~/.cookiecutter_replay/'), 'default_context': collections.OrderedDict([]), 'abbreviations': BUILTIN_ABBREVIATIONS}
+USER_CONFIG_PATH = os.path.expanduser("~/.cookiecutterrc")
+BUILTIN_ABBREVIATIONS = {
+    "gh": "https://github.com/{0}.git",
+    "gl": "https://gitlab.com/{0}.git",
+    "bb": "https://bitbucket.org/{0}",
+}
+DEFAULT_CONFIG = {
+    "cookiecutters_dir": os.path.expanduser("~/.cookiecutters/"),
+    "replay_dir": os.path.expanduser("~/.cookiecutter_replay/"),
+    "default_context": collections.OrderedDict([]),
+    "abbreviations": BUILTIN_ABBREVIATIONS,
+}
+
 
 def _expand_path(path):
     """Expand both environment variables and user home in the given path."""
     return os.path.expandvars(os.path.expanduser(path))
+
 
 def merge_configs(default, overwrite):
     """Recursively update a dict with the key/value pair of another.
@@ -28,6 +41,7 @@ def merge_configs(default, overwrite):
             new_config[k] = v
     return new_config
 
+
 def get_config(config_path):
     """Retrieve the config from the specified path, returning a config dict."""
     if not os.path.exists(config_path):
@@ -39,8 +53,9 @@ def get_config(config_path):
         except yaml.YAMLError as e:
             raise InvalidConfiguration(f"Unable to parse YAML file {config_path}: {e}")
 
-    config_dict['config_file'] = config_path
+    config_dict["config_file"] = config_path
     return config_dict
+
 
 def get_user_config(config_file=None, default_config=False):
     """Return the user config as a dict.
@@ -69,7 +84,7 @@ def get_user_config(config_file=None, default_config=False):
     if config_file and config_file != USER_CONFIG_PATH:
         return get_config(config_file)
 
-    user_config = os.environ.get('COOKIECUTTER_CONFIG')
+    user_config = os.environ.get("COOKIECUTTER_CONFIG")
     if user_config:
         return get_config(user_config)
 
