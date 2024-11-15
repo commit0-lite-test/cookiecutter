@@ -1,16 +1,16 @@
 """Functions for prompting the user for project info."""
+
 import json
 import os
-import re
 import sys
 from collections import OrderedDict
-from pathlib import Path
 from jinja2.exceptions import UndefinedError
 from rich.prompt import Confirm, InvalidResponse, Prompt, PromptBase
 from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
-def read_user_variable(var_name, default_value, prompts=None, prefix=''):
+
+def read_user_variable(var_name, default_value, prompts=None, prefix=""):
     """Prompt user for variable and return the entered value or given default.
 
     :param str var_name: Variable of the context to query the user
@@ -19,13 +19,15 @@ def read_user_variable(var_name, default_value, prompts=None, prefix=''):
     prompt_text = f"{prefix}{var_name}"
     if prompts and var_name in prompts:
         prompt_text = prompts[var_name]
-    
+
     return Prompt.ask(prompt_text, default=str(default_value))
+
 
 class YesNoPrompt(Confirm):
     """A prompt that returns a boolean for yes/no questions."""
-    yes_choices = ['1', 'true', 't', 'yes', 'y', 'on']
-    no_choices = ['0', 'false', 'f', 'no', 'n', 'off']
+
+    yes_choices = ["1", "true", "t", "yes", "y", "on"]
+    no_choices = ["0", "false", "f", "no", "n", "off"]
 
     def process_response(self, value: str) -> bool:
         """Convert choices to a bool."""
@@ -36,7 +38,8 @@ class YesNoPrompt(Confirm):
             return False
         raise InvalidResponse(self.validate_error_message)
 
-def read_user_yes_no(var_name, default_value, prompts=None, prefix=''):
+
+def read_user_yes_no(var_name, default_value, prompts=None, prefix=""):
     """Prompt the user to reply with 'yes' or 'no' (or equivalent values).
 
     - These input values will be converted to ``True``:
@@ -53,8 +56,9 @@ def read_user_yes_no(var_name, default_value, prompts=None, prefix=''):
     prompt_text = f"{prefix}{var_name}"
     if prompts and var_name in prompts:
         prompt_text = prompts[var_name]
-    
+
     return YesNoPrompt.ask(prompt_text, default=default_value)
+
 
 def read_repo_password(question):
     """Prompt the user to enter a password.
@@ -63,7 +67,8 @@ def read_repo_password(question):
     """
     return Prompt.ask(question, password=True)
 
-def read_user_choice(var_name, options, prompts=None, prefix=''):
+
+def read_user_choice(var_name, options, prompts=None, prefix=""):
     """Prompt the user to choose from several options for the given variable.
 
     The first item will be returned if no input happens.
@@ -75,10 +80,13 @@ def read_user_choice(var_name, options, prompts=None, prefix=''):
     prompt_text = f"{prefix}{var_name}"
     if prompts and var_name in prompts:
         prompt_text = prompts[var_name]
-    
+
     choices = [str(choice) for choice in options]
     return Prompt.ask(prompt_text, choices=choices, default=choices[0])
-DEFAULT_DISPLAY = 'default'
+
+
+DEFAULT_DISPLAY = "default"
+
 
 def process_json(user_value, default_value=None):
     """Load user-supplied value as a JSON dict.
@@ -90,11 +98,13 @@ def process_json(user_value, default_value=None):
     except json.JSONDecodeError:
         return default_value
 
+
 class JsonPrompt(PromptBase[dict]):
     """A prompt that returns a dict from JSON string."""
+
     default = None
     response_type = dict
-    validate_error_message = '[prompt.invalid]  Please enter a valid JSON string'
+    validate_error_message = "[prompt.invalid]  Please enter a valid JSON string"
 
     def process_response(self, value: str) -> dict:
         """Convert choices to a dict."""
@@ -103,7 +113,8 @@ class JsonPrompt(PromptBase[dict]):
         except json.JSONDecodeError:
             raise InvalidResponse(self.validate_error_message)
 
-def read_user_dict(var_name, default_value, prompts=None, prefix=''):
+
+def read_user_dict(var_name, default_value, prompts=None, prefix=""):
     """Prompt the user to provide a dictionary of data.
 
     :param str var_name: Variable as specified in the context
@@ -113,9 +124,10 @@ def read_user_dict(var_name, default_value, prompts=None, prefix=''):
     prompt_text = f"{prefix}{var_name}"
     if prompts and var_name in prompts:
         prompt_text = prompts[var_name]
-    
+
     default_json = json.dumps(default_value)
     return JsonPrompt.ask(prompt_text, default=default_json)
+
 
 def render_variable(env, raw, cookiecutter_dict):
     """Render the next variable to be displayed in the user prompt.
@@ -140,15 +152,17 @@ def render_variable(env, raw, cookiecutter_dict):
     except UndefinedError as err:
         raise UndefinedVariableInTemplate(str(err), err, cookiecutter_dict)
 
+
 def _prompts_from_options(options: dict) -> dict:
     """Process template options and return friendly prompt information."""
     prompts = {}
     for key, value in options.items():
         if isinstance(value, dict):
-            prompts[key] = value.get('_prompt', key)
+            prompts[key] = value.get("_prompt", key)
         else:
             prompts[key] = key
     return prompts
+
 
 def prompt_choice_for_template(key, options, no_input):
     """Prompt user with a set of options to choose from.
@@ -162,7 +176,10 @@ def prompt_choice_for_template(key, options, no_input):
     choices = list(options.keys())
     return read_user_choice(key, choices, prompts=prompts)
 
-def prompt_choice_for_config(cookiecutter_dict, env, key, options, no_input, prompts=None, prefix=''):
+
+def prompt_choice_for_config(
+    cookiecutter_dict, env, key, options, no_input, prompts=None, prefix=""
+):
     """Prompt user with a set of options to choose from.
 
     :param no_input: Do not prompt for user input and return the first available option.
@@ -175,6 +192,7 @@ def prompt_choice_for_config(cookiecutter_dict, env, key, options, no_input, pro
     ]
     return read_user_choice(key, rendered_options, prompts=prompts, prefix=prefix)
 
+
 def prompt_for_config(context, no_input=False):
     """Prompt user to enter a new config.
 
@@ -184,16 +202,20 @@ def prompt_for_config(context, no_input=False):
     cookiecutter_dict = OrderedDict([])
     env = create_env_with_context(context)
 
-    for key, raw in context['cookiecutter'].items():
-        if key.startswith('_'):
+    for key, raw in context["cookiecutter"].items():
+        if key.startswith("_"):
             cookiecutter_dict[key] = raw
             continue
 
         if isinstance(raw, list):
             val = prompt_choice_for_config(
-                cookiecutter_dict, env, key, raw, no_input,
-                prompts=context.get('prompts', {}),
-                prefix=context.get('prefix', '')
+                cookiecutter_dict,
+                env,
+                key,
+                raw,
+                no_input,
+                prompts=context.get("prompts", {}),
+                prefix=context.get("prefix", ""),
             )
         elif isinstance(raw, dict):
             val = prompt_choice_for_template(key, raw, no_input)
@@ -212,7 +234,8 @@ def prompt_for_config(context, no_input=False):
 
     return cookiecutter_dict
 
-def choose_nested_template(context: dict, repo_dir: str, no_input: bool=False) -> str:
+
+def choose_nested_template(context: dict, repo_dir: str, no_input: bool = False) -> str:
     """Prompt user to select the nested template to use.
 
     :param context: Source for field names and sample values.
@@ -220,19 +243,19 @@ def choose_nested_template(context: dict, repo_dir: str, no_input: bool=False) -
     :param no_input: Do not prompt for user input and use only values from context.
     :returns: Path to the selected template.
     """
-    template_options = context['cookiecutter'].get('_templates', {})
+    template_options = context["cookiecutter"].get("_templates", {})
     if not template_options:
         return repo_dir
 
     if no_input:
         return os.path.join(repo_dir, next(iter(template_options.values())))
 
-    choice = prompt_choice_for_template('_templates', template_options, no_input)
+    choice = prompt_choice_for_template("_templates", template_options, no_input)
     return os.path.join(repo_dir, template_options[choice])
 
+
 def prompt_and_delete(path, no_input=False):
-    """
-    Ask user if it's okay to delete the previously-downloaded file/directory.
+    """Ask user if it's okay to delete the previously-downloaded file/directory.
 
     If yes, delete it. If no, checks to see if the old version should be
     reused. If yes, it's reused; otherwise, Cookiecutter exits.
@@ -247,17 +270,14 @@ def prompt_and_delete(path, no_input=False):
 
     delete = read_user_yes_no(
         f"You've downloaded {path} before. Is it okay to delete and re-download it?",
-        'yes'
+        "yes",
     )
 
     if delete:
         rmtree(path)
         return True
 
-    reuse = read_user_yes_no(
-        "Do you want to re-use the existing version?",
-        'yes'
-    )
+    reuse = read_user_yes_no("Do you want to re-use the existing version?", "yes")
 
     if reuse:
         return False
