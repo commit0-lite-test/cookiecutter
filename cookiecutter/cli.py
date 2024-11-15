@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 import click
 from cookiecutter import __version__
