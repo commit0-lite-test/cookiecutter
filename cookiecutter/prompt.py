@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from jinja2.exceptions import UndefinedError
 from rich.prompt import Confirm, InvalidResponse, Prompt, PromptBase
-from typing import cast
+from typing import Any, Dict, List, Optional, Union, cast
 from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
@@ -258,9 +258,9 @@ def prompt_for_config(
 
         if not no_input:
             if isinstance(raw, bool):
-                val = read_user_yes_no(key, val)
+                val = read_user_yes_no(key, bool(val))
             elif isinstance(raw, dict):
-                val = read_user_dict(key, val)
+                val = read_user_dict(key, val if isinstance(val, dict) else {})
             else:
                 val = read_user_variable(key, val)
 
