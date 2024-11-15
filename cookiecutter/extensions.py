@@ -6,10 +6,10 @@ import uuid
 from secrets import choice
 from typing import Any
 
-import arrow
-from jinja2 import Environment, nodes
-from jinja2.ext import Extension
-from slugify import slugify as pyslugify
+import arrow  # type: ignore
+from jinja2 import Environment, nodes  # type: ignore
+from jinja2.ext import Extension  # type: ignore
+from slugify import slugify as pyslugify  # type: ignore
 
 
 class JsonifyExtension(Extension):
