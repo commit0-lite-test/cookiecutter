@@ -16,26 +16,28 @@ from cookiecutter.prompt import prompt_for_config
 from cookiecutter.replay import dump, load
 from cookiecutter.repository import determine_repo_dir
 from cookiecutter.utils import rmtree
+from cookiecutter.prompt import prompt_and_delete
+from typing import Optional, Dict, Any, Union
 
 logger = logging.getLogger(__name__)
 
 
 def cookiecutter(
-    template,
-    checkout=None,
-    no_input=False,
-    extra_context=None,
-    replay=None,
-    overwrite_if_exists=False,
-    output_dir=".",
-    config_file=None,
-    default_config=False,
-    password=None,
-    directory=None,
-    skip_if_file_exists=False,
-    accept_hooks=True,
-    keep_project_on_failure=False,
-):
+    template: str,
+    checkout: Optional[str] = None,
+    no_input: bool = False,
+    extra_context: Optional[Dict[str, Any]] = None,
+    replay: Optional[Union[bool, str]] = None,
+    overwrite_if_exists: bool = False,
+    output_dir: str = ".",
+    config_file: Optional[str] = None,
+    default_config: bool = False,
+    password: Optional[str] = None,
+    directory: Optional[str] = None,
+    skip_if_file_exists: bool = False,
+    accept_hooks: bool = True,
+    keep_project_on_failure: bool = False,
+) -> Optional[str]:
     """Run Cookiecutter just as if using it from the command line.
 
     :param template: A directory containing a project template directory,
@@ -145,7 +147,7 @@ class _patch_import_path_for_repo:
 
     def __enter__(self):
         self._path = copy(sys.path)
-        sys.path.append(self._repo_dir)
+        sys.path.append(str(self._repo_dir))
 
     def __exit__(self, type, value, traceback):
         sys.path = self._path
