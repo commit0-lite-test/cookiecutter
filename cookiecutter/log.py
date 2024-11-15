@@ -37,7 +37,9 @@ def configure_logger(
     # Create a stream handler for stdout
     stream_handler = logging.StreamHandler(sys.stdout)
     stream_handler.setLevel(LOG_LEVELS.get(stream_level, logging.DEBUG))
-    stream_formatter = logging.Formatter(LOG_FORMATS.get(stream_level, LOG_FORMATS["DEBUG"]))
+    stream_formatter = logging.Formatter(
+        LOG_FORMATS.get(stream_level, LOG_FORMATS["DEBUG"])
+    )
     stream_handler.setFormatter(stream_formatter)
     logger.addHandler(stream_handler)
 
