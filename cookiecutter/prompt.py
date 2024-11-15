@@ -60,7 +60,8 @@ def read_user_yes_no(var_name, default_value, prompts=None, prefix=""):
     return YesNoPrompt.ask(prompt_text, default=default_value)
 
 
-def read_repo_password(question):
+
+def read_repo_password(question: str) -> str:
     """Prompt the user to enter a password.
 
     :param str question: Question to the user
@@ -88,7 +89,8 @@ def read_user_choice(var_name, options, prompts=None, prefix=""):
 DEFAULT_DISPLAY = "default"
 
 
-def process_json(user_value, default_value=None):
+
+def process_json(user_value: str, default_value: Any = None) -> Any:
     """Load user-supplied value as a JSON dict.
 
     :param str user_value: User-supplied value to load as a JSON dict
@@ -129,7 +131,8 @@ def read_user_dict(var_name, default_value, prompts=None, prefix=""):
     return JsonPrompt.ask(prompt_text, default=default_json)
 
 
-def render_variable(env, raw, cookiecutter_dict):
+
+def render_variable(env: Any, raw: str, cookiecutter_dict: Dict[str, Any]) -> str:
     """Render the next variable to be displayed in the user prompt.
 
     Inside the prompting taken from the cookiecutter.json file, this renders
@@ -164,7 +167,8 @@ def _prompts_from_options(options: dict) -> dict:
     return prompts
 
 
-def prompt_choice_for_template(key, options, no_input):
+
+def prompt_choice_for_template(key: str, options: Dict[str, Any], no_input: bool) -> str:
     """Prompt user with a set of options to choose from.
 
     :param no_input: Do not prompt for user input and return the first available option.
@@ -193,7 +197,8 @@ def prompt_choice_for_config(
     return read_user_choice(key, rendered_options, prompts=prompts, prefix=prefix)
 
 
-def prompt_for_config(context, no_input=False):
+
+def prompt_for_config(context: Dict[str, Any], no_input: bool = False) -> Dict[str, Any]:
     """Prompt user to enter a new config.
 
     :param dict context: Source for field names and sample values.
@@ -254,7 +259,8 @@ def choose_nested_template(context: dict, repo_dir: str, no_input: bool = False)
     return os.path.join(repo_dir, template_options[choice])
 
 
-def prompt_and_delete(path, no_input=False):
+
+def prompt_and_delete(path: Union[str, Path], no_input: bool = False) -> bool:
     """Ask user if it's okay to delete the previously-downloaded file/directory.
 
     If yes, delete it. If no, checks to see if the old version should be
