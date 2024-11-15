@@ -17,7 +17,8 @@ from cookiecutter.replay import dump, load
 from cookiecutter.repository import determine_repo_dir
 from cookiecutter.utils import rmtree
 from cookiecutter.prompt import prompt_and_delete
-from typing import Optional, Dict, Any, Union
+from typing import Optional, Dict, Any, Union, Type
+from types import TracebackType
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +111,8 @@ def cookiecutter(
             context = load(config_dict["replay_dir"], template)
 
         # Include template dir or url in the context dict
-        context["cookiecutter"]["_template"] = template
+        if isinstance(context, dict) and isinstance(context.get("cookiecutter"), dict):
+            context["cookiecutter"]["_template"] = template
 
         # Render the project
         project_dir = generate_files(
@@ -138,6 +140,10 @@ def cookiecutter(
             if "project_dir" in locals():
                 rmtree(project_dir)
         raise
+    finally:
+        # Ensure project_dir is defined
+        if "project_dir" not in locals():
+            project_dir = None
 
 
 class _patch_import_path_for_repo:
