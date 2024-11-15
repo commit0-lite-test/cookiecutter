@@ -2,22 +2,24 @@
 
 import os
 import sys
+from typing import List, Optional, Any
+
 import click
 from cookiecutter import __version__
 from cookiecutter.config import get_user_config
-from cookiecutter.exceptions import RepositoryNotFound
+from cookiecutter.exceptions import CookiecutterException, RepositoryNotFound
 from cookiecutter.log import configure_logger
 from cookiecutter.main import cookiecutter
 
 
-def version_msg():
+def version_msg() -> str:
     """Return the Cookiecutter version, location and Python powering it."""
     python_version = sys.version
     location = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     return f"Cookiecutter {__version__}\nPython {python_version}\nFrom {location}"
 
 
-def validate_extra_context(ctx, param, value):
+def validate_extra_context(ctx: click.Context, param: click.Parameter, value: List[str]) -> List[str]:
     """Validate extra context."""
     for s in value:
         if "=" not in s:
@@ -27,7 +29,7 @@ def validate_extra_context(ctx, param, value):
     return value
 
 
-def list_installed_templates(default_config, passed_config_file):
+def list_installed_templates(default_config: bool, passed_config_file: Optional[str]) -> None:
     """List installed (locally cloned) templates. Use cookiecutter --list-installed."""
     config = get_user_config(passed_config_file, default_config)
     cookiecutters_dir = config.get("cookiecutters_dir")
@@ -128,24 +130,24 @@ def list_installed_templates(default_config, passed_config_file):
     help="Do not delete project folder on failure",
 )
 def main(
-    template,
-    extra_context,
-    no_input,
-    checkout,
-    verbose,
-    replay,
-    overwrite_if_exists,
-    output_dir,
-    config_file,
-    default_config,
-    debug_file,
-    directory,
-    skip_if_file_exists,
-    accept_hooks,
-    replay_file,
-    list_installed,
-    keep_project_on_failure,
-):
+    template: Optional[str],
+    extra_context: List[str],
+    no_input: bool,
+    checkout: Optional[str],
+    verbose: bool,
+    replay: bool,
+    overwrite_if_exists: bool,
+    output_dir: str,
+    config_file: Optional[str],
+    default_config: bool,
+    debug_file: Optional[str],
+    directory: Optional[str],
+    skip_if_file_exists: bool,
+    accept_hooks: str,
+    replay_file: Optional[str],
+    list_installed: bool,
+    keep_project_on_failure: bool,
+) -> None:
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
     Cookiecutter is free and open source software, developed and managed by
