@@ -4,7 +4,7 @@ import os
 import tempfile
 import shutil
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 from zipfile import BadZipFile, ZipFile
 import requests
 from cookiecutter.exceptions import InvalidZipRepository
@@ -13,10 +13,10 @@ from cookiecutter.exceptions import InvalidZipRepository
 def unzip(
     zip_uri: str,
     is_url: bool,
-    clone_to_dir: "os.PathLike[str]" = ".",
+    clone_to_dir: Union[str, Path] = ".",
     no_input: bool = False,
     password: Optional[str] = None,
-):
+) -> Path:
     """Download and unpack a zipfile at a given URI.
 
     This will download the zipfile to the cookiecutter repository,
