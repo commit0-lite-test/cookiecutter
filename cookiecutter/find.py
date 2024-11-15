@@ -1,12 +1,15 @@
 """Functions for finding Cookiecutter templates and other components."""
+
 import logging
 import os
 from pathlib import Path
 from jinja2 import Environment
 from cookiecutter.exceptions import NonTemplatedInputDirException
+
 logger = logging.getLogger(__name__)
 
-def find_template(repo_dir: 'os.PathLike[str]', env: Environment) -> Path:
+
+def find_template(repo_dir: "os.PathLike[str]", env: Environment) -> Path:
     """Determine which child directory of ``repo_dir`` is the project template.
 
     :param repo_dir: Local directory of newly cloned repo.
@@ -14,11 +17,11 @@ def find_template(repo_dir: 'os.PathLike[str]', env: Environment) -> Path:
     :return: Relative path to project template.
     """
     repo_dir_path = Path(repo_dir)
-    logger.debug('Searching %s for the project template.', repo_dir)
+    logger.debug("Searching %s for the project template.", repo_dir)
 
     # Check if repo_dir itself is a cookiecutter template
     if _is_cookiecutter_template(repo_dir_path, env):
-        return Path('.')
+        return Path(".")
 
     # Look for 'cookiecutter.json' in subdirectories
     for dir_path in repo_dir_path.iterdir():
@@ -27,15 +30,17 @@ def find_template(repo_dir: 'os.PathLike[str]', env: Environment) -> Path:
 
     # If we haven't found a template, raise an exception
     raise NonTemplatedInputDirException(
-        'The repository {} is not a valid Cookiecutter template. '
+        "The repository {} is not a valid Cookiecutter template. "
         'A valid template must contain a "cookiecutter.json" file '
-        'or have a "cookiecutter.json" file in one of its subdirectories.'
-        .format(repo_dir)
+        'or have a "cookiecutter.json" file in one of its subdirectories.'.format(
+            repo_dir
+        )
     )
+
 
 def _is_cookiecutter_template(dir_path: Path, env: Environment) -> bool:
     """Check if the given directory is a valid Cookiecutter template."""
-    cookiecutter_json_path = dir_path / 'cookiecutter.json'
+    cookiecutter_json_path = dir_path / "cookiecutter.json"
     if cookiecutter_json_path.is_file():
         try:
             env.get_template(str(cookiecutter_json_path.relative_to(dir_path)))
@@ -44,6 +49,6 @@ def _is_cookiecutter_template(dir_path: Path, env: Environment) -> bool:
             logger.debug(
                 "Unable to load %s as a valid Jinja2 template.",
                 cookiecutter_json_path,
-                exc_info=True
+                exc_info=True,
             )
     return False
