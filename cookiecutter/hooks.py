@@ -6,13 +6,16 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Optional, Union
+
 from jinja2.exceptions import UndefinedError
-from cookiecutter.exceptions import FailedHookException
+from cookiecutter.exceptions import FailedHookException, UndefinedVariableInTemplate
 from cookiecutter.utils import (
     create_env_with_context,
     create_tmp_repo_dir,
     rmtree,
     work_in,
+    make_executable,
 )
 
 logger = logging.getLogger(__name__)
@@ -20,7 +23,7 @@ _HOOKS = ["pre_prompt", "pre_gen_project", "post_gen_project"]
 EXIT_SUCCESS = 0
 
 
-def valid_hook(hook_file, hook_name):
+def valid_hook(hook_file: str, hook_name: str) -> bool:
     """Determine if a hook file is valid.
 
     :param hook_file: The hook file to consider for validity
@@ -69,7 +72,7 @@ def run_script(script_path, cwd="."):
             subprocess.check_call([script_path], cwd=cwd)
 
 
-def run_script_with_context(script_path, cwd, context):
+def run_script_with_context(script_path: str, cwd: str, context: dict) -> None:
     """Execute a script after rendering it with Jinja.
 
     :param script_path: Absolute path to the script to run.
@@ -92,7 +95,7 @@ def run_script_with_context(script_path, cwd, context):
     os.remove(temp_script.name)
 
 
-def run_hook(hook_name, project_dir, context):
+def run_hook(hook_name: str, project_dir: str, context: dict) -> None:
     """Try to find and execute a hook from the specified project directory.
 
     :param hook_name: The hook to execute.
@@ -127,7 +130,7 @@ def run_hook_from_repo_dir(
             raise
 
 
-def run_pre_prompt_hook(repo_dir: "os.PathLike[str]") -> Path:
+def run_pre_prompt_hook(repo_dir: Union[str, Path]) -> Path:
     """Run pre_prompt hook from repo directory.
 
     :param repo_dir: Project template input directory.
