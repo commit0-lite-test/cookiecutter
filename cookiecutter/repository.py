@@ -2,6 +2,7 @@
 
 import os
 import re
+from os import PathLike
 from cookiecutter.exceptions import RepositoryNotFound
 from cookiecutter.vcs import clone
 from cookiecutter.zipfile import unzip
@@ -34,7 +35,7 @@ def expand_abbreviations(template: str, abbreviations: dict[str, str]) -> str:
     return template
 
 
-def repository_has_cookiecutter_json(repo_directory: str) -> bool:
+def repository_has_cookiecutter_json(repo_directory: PathLike[str]) -> bool:
     """Determine if `repo_directory` contains a `cookiecutter.json` file.
 
     :param repo_directory: The candidate repository directory.
