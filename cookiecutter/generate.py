@@ -6,9 +6,13 @@ import logging
 import os
 import shutil
 from collections import OrderedDict
+from pathlib import Path
+from typing import Any, Dict, Union
+
 from binaryornot.check import is_binary
 from jinja2 import Environment
 from jinja2.exceptions import TemplateSyntaxError
+
 from cookiecutter.exceptions import ContextDecodingException
 from cookiecutter.utils import (
     create_env_with_context,
@@ -20,7 +24,7 @@ from cookiecutter.utils import (
 logger = logging.getLogger(__name__)
 
 
-def is_copy_only_path(path, context):
+def is_copy_only_path(path: str, context: Dict[str, Any]) -> bool:
     """Check whether the given `path` should only be copied and not rendered.
 
     Returns True if `path` matches a pattern in the given `context` dict,
@@ -35,8 +39,11 @@ def is_copy_only_path(path, context):
 
 
 def apply_overwrites_to_context(
-    context, overwrite_context, *, in_dictionary_variable=False
-):
+    context: Dict[str, Any],
+    overwrite_context: Dict[str, Any],
+    *,
+    in_dictionary_variable: bool = False
+) -> None:
     """Modify the given context in place based on the overwrite_context."""
     for key, value in overwrite_context.items():
         if isinstance(value, dict):
@@ -57,8 +64,10 @@ def apply_overwrites_to_context(
 
 
 def generate_context(
-    context_file="cookiecutter.json", default_context=None, extra_context=None
-):
+    context_file: str = "cookiecutter.json",
+    default_context: Dict[str, Any] | None = None,
+    extra_context: Dict[str, Any] | None = None
+) -> Dict[str, Any]:
     """Generate the context for a Cookiecutter project template.
 
     Loads the JSON file as a Python object, with key being the JSON filename.
@@ -162,11 +171,11 @@ def generate_file(
 
 def render_and_create_dir(
     dirname: str,
-    context: dict,
-    output_dir: "os.PathLike[str]",
+    context: Dict[str, Any],
+    output_dir: Union[str, Path],
     environment: Environment,
-    overwrite_if_exists: bool = False,
-):
+    overwrite_if_exists: bool = False
+) -> str:
     """Render name of a directory, create the directory, return its path."""
     name_tmpl = environment.from_string(dirname)
     rendered_dirname = name_tmpl.render(**context)
@@ -185,8 +194,12 @@ def render_and_create_dir(
 
 
 def _run_hook_from_repo_dir(
-    repo_dir, hook_name, project_dir, context, delete_project_on_failure
-):
+    repo_dir: Union[str, Path],
+    hook_name: str,
+    project_dir: Union[str, Path],
+    context: Dict[str, Any],
+    delete_project_on_failure: bool
+) -> None:
     """Run hook from repo directory, clean project directory if hook fails.
 
     :param repo_dir: Project template input directory.
@@ -207,14 +220,14 @@ def _run_hook_from_repo_dir(
 
 
 def generate_files(
-    repo_dir,
-    context=None,
-    output_dir=".",
-    overwrite_if_exists=False,
-    skip_if_file_exists=False,
-    accept_hooks=True,
-    keep_project_on_failure=False,
-):
+    repo_dir: Union[str, Path],
+    context: Dict[str, Any] | None = None,
+    output_dir: Union[str, Path] = ".",
+    overwrite_if_exists: bool = False,
+    skip_if_file_exists: bool = False,
+    accept_hooks: bool = True,
+    keep_project_on_failure: bool = False
+) -> str:
     """Render the templates and saves them to files.
 
     :param repo_dir: Project template input directory.
