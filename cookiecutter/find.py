@@ -6,7 +6,7 @@ from pathlib import Path
 from cookiecutter.exceptions import NonTemplatedInputDirException
 
 try:
-    from jinja2 import Environment
+    from jinja2 import Environment  # type: ignore
 except ImportError:
     print("jinja2 is not installed. Please install it using 'pip install jinja2'")
     raise
