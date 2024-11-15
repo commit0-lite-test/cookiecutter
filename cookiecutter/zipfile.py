@@ -1,4 +1,5 @@
 """Utility functions for handling and fetching repo archives in zip format."""
+
 import os
 import tempfile
 import shutil
@@ -7,10 +8,15 @@ from typing import Optional
 from zipfile import BadZipFile, ZipFile
 import requests
 from cookiecutter.exceptions import InvalidZipRepository
-from cookiecutter.prompt import prompt_and_delete, read_repo_password
-from cookiecutter.utils import make_sure_path_exists
 
-def unzip(zip_uri: str, is_url: bool, clone_to_dir: 'os.PathLike[str]'='.', no_input: bool=False, password: Optional[str]=None):
+
+def unzip(
+    zip_uri: str,
+    is_url: bool,
+    clone_to_dir: "os.PathLike[str]" = ".",
+    no_input: bool = False,
+    password: Optional[str] = None,
+):
     """Download and unpack a zipfile at a given URI.
 
     This will download the zipfile to the cookiecutter repository,
@@ -37,7 +43,7 @@ def unzip(zip_uri: str, is_url: bool, clone_to_dir: 'os.PathLike[str]'='.', no_i
     # Create a temporary directory to extract the contents
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)
-        
+
         try:
             with ZipFile(zip_file) as zf:
                 if password:
