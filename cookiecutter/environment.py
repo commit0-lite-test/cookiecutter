@@ -14,6 +14,7 @@ class ExtensionLoaderMixin:
     """
 
     def __init__(self, **kwargs: Any) -> None:
+        self.extensions = []
         """Initialize the Jinja2 Environment object while loading extensions.
 
         Does the following:
