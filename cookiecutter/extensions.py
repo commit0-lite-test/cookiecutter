@@ -5,6 +5,7 @@ import uuid
 from secrets import choice
 import arrow
 from jinja2 import nodes
+from jinja2 import nodes
 from jinja2.ext import Extension
 from slugify import slugify as pyslugify
 
@@ -69,4 +70,20 @@ class TimeExtension(Extension):
 
     def parse(self, parser):
         """Parse datetime template and add datetime value."""
-        pass
+        lineno = next(parser.stream).lineno
+        token = parser.stream.next()
+        format_string = self.environment.datetime_format
+        if token.type == 'string':
+            format_string = token.value
+        
+        node = nodes.Call(
+            self.attr('_render_now'),
+            [nodes.Const(format_string)],
+            [],
+            None,
+            None
+        )
+        return nodes.Output([node]).set_lineno(lineno)
+
+    def _render_now(self, format_string):
+        return arrow.now().format(format_string)
