@@ -268,7 +268,11 @@ def generate_files(
 
     if accept_hooks:
         _run_hook_from_repo_dir(
-            repo_dir, "pre_gen_project", project_dir, context, not keep_project_on_failure
+            repo_dir,
+            "pre_gen_project",
+            project_dir,
+            context,
+            not keep_project_on_failure,
         )
 
     with work_in(repo_dir):
@@ -302,7 +306,11 @@ def generate_files(
 
     if accept_hooks:
         _run_hook_from_repo_dir(
-            repo_dir, "post_gen_project", project_dir, context, not keep_project_on_failure
+            repo_dir,
+            "post_gen_project",
+            project_dir,
+            context,
+            not keep_project_on_failure,
         )
 
     return project_dir
