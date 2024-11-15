@@ -57,7 +57,9 @@ def get_config(config_path: str) -> dict:
     return config_dict
 
 
-def get_user_config(config_file: str | None = None, default_config: bool | dict = False) -> dict:
+def get_user_config(
+    config_file: str | None = None, default_config: bool | dict = False
+) -> dict:
     """Return the user config as a dict.
 
     If ``default_config`` is True, ignore ``config_file`` and return default
