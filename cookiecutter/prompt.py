@@ -13,7 +13,12 @@ from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
 
-def read_user_variable(var_name: str, default_value: Any, prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> str:
+def read_user_variable(
+    var_name: str,
+    default_value: Any,
+    prompts: Optional[Dict[str, str]] = None,
+    prefix: str = "",
+) -> str:
     """Prompt user for variable and return the entered value or given default.
 
     :param str var_name: Variable of the context to query the user
@@ -42,7 +47,12 @@ class YesNoPrompt(Confirm):
         raise InvalidResponse(self.validate_error_message)
 
 
-def read_user_yes_no(var_name: str, default_value: bool, prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> bool:
+def read_user_yes_no(
+    var_name: str,
+    default_value: bool,
+    prompts: Optional[Dict[str, str]] = None,
+    prefix: str = "",
+) -> bool:
     """Prompt the user to reply with 'yes' or 'no' (or equivalent values).
 
     - These input values will be converted to ``True``:
@@ -63,7 +73,6 @@ def read_user_yes_no(var_name: str, default_value: bool, prompts: Optional[Dict[
     return YesNoPrompt.ask(prompt_text, default=default_value)
 
 
-
 def read_repo_password(question: str) -> str:
     """Prompt the user to enter a password.
 
@@ -72,7 +81,12 @@ def read_repo_password(question: str) -> str:
     return Prompt.ask(question, password=True)
 
 
-def read_user_choice(var_name: str, options: List[str], prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> str:
+def read_user_choice(
+    var_name: str,
+    options: List[str],
+    prompts: Optional[Dict[str, str]] = None,
+    prefix: str = "",
+) -> str:
     """Prompt the user to choose from several options for the given variable.
 
     The first item will be returned if no input happens.
@@ -90,7 +104,6 @@ def read_user_choice(var_name: str, options: List[str], prompts: Optional[Dict[s
 
 
 DEFAULT_DISPLAY = "default"
-
 
 
 def process_json(user_value: str, default_value: Any = None) -> Any:
@@ -119,7 +132,12 @@ class JsonPrompt(PromptBase[dict]):
             raise InvalidResponse(self.validate_error_message)
 
 
-def read_user_dict(var_name: str, default_value: Dict[str, Any], prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> Dict[str, Any]:
+def read_user_dict(
+    var_name: str,
+    default_value: Dict[str, Any],
+    prompts: Optional[Dict[str, str]] = None,
+    prefix: str = "",
+) -> Dict[str, Any]:
     """Prompt the user to provide a dictionary of data.
 
     :param str var_name: Variable as specified in the context
@@ -132,7 +150,6 @@ def read_user_dict(var_name: str, default_value: Dict[str, Any], prompts: Option
 
     default_json = json.dumps(default_value)
     return JsonPrompt.ask(prompt_text, default=default_json)
-
 
 
 def render_variable(env: Any, raw: str, cookiecutter_dict: Dict[str, Any]) -> str:
@@ -170,8 +187,9 @@ def _prompts_from_options(options: dict) -> dict:
     return prompts
 
 
-
-def prompt_choice_for_template(key: str, options: Dict[str, Any], no_input: bool) -> str:
+def prompt_choice_for_template(
+    key: str, options: Dict[str, Any], no_input: bool
+) -> str:
     """Prompt user with a set of options to choose from.
 
     :param no_input: Do not prompt for user input and return the first available option.
@@ -191,7 +209,7 @@ def prompt_choice_for_config(
     options: List[str],
     no_input: bool,
     prompts: Optional[Dict[str, str]] = None,
-    prefix: str = ""
+    prefix: str = "",
 ) -> str:
     """Prompt user with a set of options to choose from.
 
@@ -206,8 +224,9 @@ def prompt_choice_for_config(
     return read_user_choice(key, rendered_options, prompts=prompts, prefix=prefix)
 
 
-
-def prompt_for_config(context: Dict[str, Any], no_input: bool = False) -> Dict[str, Any]:
+def prompt_for_config(
+    context: Dict[str, Any], no_input: bool = False
+) -> Dict[str, Any]:
     """Prompt user to enter a new config.
 
     :param dict context: Source for field names and sample values.
@@ -266,7 +285,6 @@ def choose_nested_template(context: dict, repo_dir: str, no_input: bool = False)
 
     choice = prompt_choice_for_template("_templates", template_options, no_input)
     return os.path.join(repo_dir, template_options[choice])
-
 
 
 def prompt_and_delete(path: Union[str, Path], no_input: bool = False) -> bool:
