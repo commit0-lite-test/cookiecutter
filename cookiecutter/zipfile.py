@@ -1,6 +1,5 @@
 """Utility functions for handling and fetching repo archives in zip format."""
 
-import os
 import tempfile
 import shutil
 from pathlib import Path
