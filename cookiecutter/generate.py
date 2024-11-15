@@ -42,7 +42,7 @@ def apply_overwrites_to_context(
     context: Dict[str, Any],
     overwrite_context: Dict[str, Any],
     *,
-    in_dictionary_variable: bool = False
+    in_dictionary_variable: bool = False,
 ) -> None:
     """Modify the given context in place based on the overwrite_context."""
     for key, value in overwrite_context.items():
@@ -66,7 +66,7 @@ def apply_overwrites_to_context(
 def generate_context(
     context_file: str = "cookiecutter.json",
     default_context: Dict[str, Any] | None = None,
-    extra_context: Dict[str, Any] | None = None
+    extra_context: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     """Generate the context for a Cookiecutter project template.
 
@@ -103,7 +103,7 @@ def generate_file(
     infile: str,
     context: Dict[str, Any],
     env: Environment,
-    skip_if_file_exists: bool = False
+    skip_if_file_exists: bool = False,
 ) -> bool:
     """Render filename of infile as name of outfile, handle infile correctly.
 
@@ -174,7 +174,7 @@ def render_and_create_dir(
     context: Dict[str, Any],
     output_dir: Union[str, Path],
     environment: Environment,
-    overwrite_if_exists: bool = False
+    overwrite_if_exists: bool = False,
 ) -> str:
     """Render name of a directory, create the directory, return its path."""
     name_tmpl = environment.from_string(dirname)
@@ -198,7 +198,7 @@ def _run_hook_from_repo_dir(
     hook_name: str,
     project_dir: Union[str, Path],
     context: Dict[str, Any],
-    delete_project_on_failure: bool
+    delete_project_on_failure: bool,
 ) -> None:
     """Run hook from repo directory, clean project directory if hook fails.
 
@@ -226,7 +226,7 @@ def generate_files(
     overwrite_if_exists: bool = False,
     skip_if_file_exists: bool = False,
     accept_hooks: bool = True,
-    keep_project_on_failure: bool = False
+    keep_project_on_failure: bool = False,
 ) -> str:
     """Render the templates and saves them to files.
 
