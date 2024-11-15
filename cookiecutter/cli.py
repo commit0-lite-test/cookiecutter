@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import List, Optional, Any
+from typing import List, Optional
 
 import click
 from cookiecutter import __version__
@@ -19,7 +19,9 @@ def version_msg() -> str:
     return f"Cookiecutter {__version__}\nPython {python_version}\nFrom {location}"
 
 
-def validate_extra_context(ctx: click.Context, param: click.Parameter, value: List[str]) -> List[str]:
+def validate_extra_context(
+    ctx: click.Context, param: click.Parameter, value: List[str]
+) -> List[str]:
     """Validate extra context."""
     for s in value:
         if "=" not in s:
@@ -29,7 +31,9 @@ def validate_extra_context(ctx: click.Context, param: click.Parameter, value: Li
     return value
 
 
-def list_installed_templates(default_config: bool, passed_config_file: Optional[str]) -> None:
+def list_installed_templates(
+    default_config: bool, passed_config_file: Optional[str]
+) -> None:
     """List installed (locally cloned) templates. Use cookiecutter --list-installed."""
     config = get_user_config(passed_config_file, default_config)
     cookiecutters_dir = config.get("cookiecutters_dir")
