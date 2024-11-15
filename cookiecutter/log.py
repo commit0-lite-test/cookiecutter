@@ -17,7 +17,9 @@ LOG_FORMATS = {
 }
 
 
-def configure_logger(stream_level: str = "DEBUG", debug_file: Union[str, None] = None) -> logging.Logger:
+def configure_logger(
+    stream_level: str = "DEBUG", debug_file: Union[str, None] = None
+) -> logging.Logger:
     """Configure logging for cookiecutter.
 
     Set up logging to stdout with given level. If ``debug_file`` is given set
