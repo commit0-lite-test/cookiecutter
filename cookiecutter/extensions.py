@@ -4,8 +4,10 @@ import json
 import string
 import uuid
 from secrets import choice
+from typing import Any
+
 import arrow
-from jinja2 import nodes
+from jinja2 import Environment, nodes
 from jinja2.ext import Extension
 from slugify import slugify as pyslugify
 
@@ -13,11 +15,11 @@ from slugify import slugify as pyslugify
 class JsonifyExtension(Extension):
     """Jinja2 extension to convert a Python object to JSON."""
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         """Initialize the extension with the given environment."""
         super().__init__(environment)
 
-        def jsonify(obj):
+        def jsonify(obj: Any) -> str:
             return json.dumps(obj, sort_keys=True, indent=4)
 
         environment.filters["jsonify"] = jsonify
@@ -43,11 +45,11 @@ class RandomStringExtension(Extension):
 class SlugifyExtension(Extension):
     """Jinja2 Extension to slugify string."""
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         """Jinja2 Extension constructor."""
         super().__init__(environment)
 
-        def slugify(value, **kwargs):
+        def slugify(value: str, **kwargs: Any) -> str:
             """Slugifies the value."""
             return pyslugify(value, **kwargs)
 
@@ -57,11 +59,11 @@ class SlugifyExtension(Extension):
 class UUIDExtension(Extension):
     """Jinja2 Extension to generate uuid4 string."""
 
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         """Jinja2 Extension constructor."""
         super().__init__(environment)
 
-        def uuid4():
+        def uuid4() -> str:
             """Generate UUID4."""
             return str(uuid.uuid4())
 
