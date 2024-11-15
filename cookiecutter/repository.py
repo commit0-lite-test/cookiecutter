@@ -50,10 +50,9 @@ def determine_repo_dir(
     checkout: str | None,
     no_input: bool,
     password: str | None = None,
-    directory: str | None = None
+    directory: str | None = None,
 ) -> tuple[str, bool]:
-    """
-    Locate the repository directory from a template reference.
+    """Locate the repository directory from a template reference.
 
     :param template: The project template name.
     :param abbreviations: A dictionary of abbreviations.
