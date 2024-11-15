@@ -12,28 +12,29 @@ REPO_REGEX = re.compile(
 )
 
 
-def is_repo_url(value):
+def is_repo_url(value: str) -> bool:
     """Return True if value is a repository URL."""
     return bool(REPO_REGEX.match(value))
 
 
-def is_zip_file(value):
+def is_zip_file(value: str) -> bool:
     """Return True if value is a zip file."""
     return value.lower().endswith(".zip")
 
 
-def expand_abbreviations(template, abbreviations):
+def expand_abbreviations(template: str, abbreviations: dict[str, str]) -> str:
     """Expand abbreviations in a template name.
 
     :param template: The project template name.
-    :param abbreviations: Abbreviation definitions.
+    :param abbreviations: A dictionary of abbreviations.
+    :return: The expanded template name.
     """
     if template in abbreviations:
         return abbreviations[template]
     return template
 
 
-def repository_has_cookiecutter_json(repo_directory):
+def repository_has_cookiecutter_json(repo_directory: str) -> bool:
     """Determine if `repo_directory` contains a `cookiecutter.json` file.
 
     :param repo_directory: The candidate repository directory.
@@ -43,33 +44,25 @@ def repository_has_cookiecutter_json(repo_directory):
 
 
 def determine_repo_dir(
-    template,
-    abbreviations,
-    clone_to_dir,
-    checkout,
-    no_input,
-    password=None,
-    directory=None,
-):
-    """Locate the repository directory from a template reference.
+    template: str,
+    abbreviations: dict[str, str],
+    clone_to_dir: str,
+    checkout: str | None,
+    no_input: bool,
+    password: str | None = None,
+    directory: str | None = None
+) -> tuple[str, bool]:
+    """
+    Locate the repository directory from a template reference.
 
-    Applies repository abbreviations to the template reference.
-    If the template refers to a repository URL, clone it.
-    If the template is a path to a local repository, use it.
-
-    :param template: A directory containing a project template directory,
-        or a URL to a git repository.
-    :param abbreviations: A dictionary of repository abbreviation
-        definitions.
-    :param clone_to_dir: The directory to clone the repository into.
-    :param checkout: The branch, tag or commit ID to checkout after clone.
-    :param no_input: Do not prompt for user input and eventually force a refresh of
-        cached resources.
-    :param password: The password to use when extracting the repository.
-    :param directory: Directory within repo where cookiecutter.json lives.
-    :return: A tuple containing the cookiecutter template directory, and
-        a boolean describing whether that directory should be cleaned up
-        after the template has been instantiated.
+    :param template: The project template name.
+    :param abbreviations: A dictionary of abbreviations.
+    :param clone_to_dir: The directory to clone the repository to.
+    :param checkout: The branch, tag or commit to checkout after clone.
+    :param no_input: Whether to prompt the user for input or not.
+    :param password: The password to use for authentication (optional).
+    :param directory: The directory to use for the repository (optional).
+    :return: The repository directory and a boolean indicating if the repository was cloned.
     :raises: `RepositoryNotFound` if a repository directory could not be found.
     """
     template = expand_abbreviations(template, abbreviations)
