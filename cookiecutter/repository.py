@@ -1,18 +1,26 @@
 """Cookiecutter repository functions."""
+
 import os
 import re
 from cookiecutter.exceptions import RepositoryNotFound
 from cookiecutter.vcs import clone
 from cookiecutter.zipfile import unzip
-REPO_REGEX = re.compile('\n# something like git:// ssh:// file:// etc.\n((((git|hg)\\+)?(git|ssh|file|https?):(//)?)\n |                                      # or\n (\\w+@[\\w\\.]+)                          # something like user@...\n)\n', re.VERBOSE)
+
+REPO_REGEX = re.compile(
+    "\n# something like git:// ssh:// file:// etc.\n((((git|hg)\\+)?(git|ssh|file|https?):(//)?)\n |                                      # or\n (\\w+@[\\w\\.]+)                          # something like user@...\n)\n",
+    re.VERBOSE,
+)
+
 
 def is_repo_url(value):
     """Return True if value is a repository URL."""
     return bool(REPO_REGEX.match(value))
 
+
 def is_zip_file(value):
     """Return True if value is a zip file."""
-    return value.lower().endswith('.zip')
+    return value.lower().endswith(".zip")
+
 
 def expand_abbreviations(template, abbreviations):
     """Expand abbreviations in a template name.
@@ -24,17 +32,26 @@ def expand_abbreviations(template, abbreviations):
         return abbreviations[template]
     return template
 
+
 def repository_has_cookiecutter_json(repo_directory):
     """Determine if `repo_directory` contains a `cookiecutter.json` file.
 
     :param repo_directory: The candidate repository directory.
     :return: True if the `repo_directory` is valid, else False.
     """
-    return os.path.exists(os.path.join(repo_directory, 'cookiecutter.json'))
+    return os.path.exists(os.path.join(repo_directory, "cookiecutter.json"))
 
-def determine_repo_dir(template, abbreviations, clone_to_dir, checkout, no_input, password=None, directory=None):
-    """
-    Locate the repository directory from a template reference.
+
+def determine_repo_dir(
+    template,
+    abbreviations,
+    clone_to_dir,
+    checkout,
+    no_input,
+    password=None,
+    directory=None,
+):
+    """Locate the repository directory from a template reference.
 
     Applies repository abbreviations to the template reference.
     If the template refers to a repository URL, clone it.
@@ -58,10 +75,18 @@ def determine_repo_dir(template, abbreviations, clone_to_dir, checkout, no_input
     template = expand_abbreviations(template, abbreviations)
 
     if is_repo_url(template):
-        repo_dir = clone(template, checkout=checkout, clone_to_dir=clone_to_dir, no_input=no_input)
+        repo_dir = clone(
+            template, checkout=checkout, clone_to_dir=clone_to_dir, no_input=no_input
+        )
         cleanup = True
     elif is_zip_file(template):
-        repo_dir = unzip(template, is_url=False, clone_to_dir=clone_to_dir, no_input=no_input, password=password)
+        repo_dir = unzip(
+            template,
+            is_url=False,
+            clone_to_dir=clone_to_dir,
+            no_input=no_input,
+            password=password,
+        )
         cleanup = True
     else:
         repo_dir = template
@@ -72,7 +97,9 @@ def determine_repo_dir(template, abbreviations, clone_to_dir, checkout, no_input
 
     if not repository_has_cookiecutter_json(repo_dir):
         raise RepositoryNotFound(
-            'The repository {} does not contain a cookiecutter.json file'.format(repo_dir)
+            "The repository {} does not contain a cookiecutter.json file".format(
+                repo_dir
+            )
         )
 
     return repo_dir, cleanup
