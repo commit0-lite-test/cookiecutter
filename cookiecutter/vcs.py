@@ -3,15 +3,18 @@
 import logging
 import os
 import subprocess
-from typing import Optional
+import shutil
+from typing import Optional, Tuple, Union
+
 from cookiecutter.exceptions import RepositoryCloneFailed, VCSNotInstalled
 from cookiecutter.prompt import prompt_and_delete
+from cookiecutter.utils import rmtree
 
 logger = logging.getLogger(__name__)
 BRANCH_ERRORS = ["error: pathspec", "unknown revision"]
 
 
-def identify_repo(repo_url):
+def identify_repo(repo_url: str) -> Optional[Tuple[str, str]]:
     """Determine if `repo_url` should be treated as a URL to a git or hg repo.
 
     Repos can be identified by prepending "hg+" or "git+" to the repo URL.
@@ -26,23 +29,21 @@ def identify_repo(repo_url):
     return None
 
 
-def is_vcs_installed(repo_type):
+def is_vcs_installed(repo_type: str) -> bool:
     """Check if the version control system for a repo type is installed.
 
     :param repo_type: The type of version control system ('git' or 'hg').
     :return: True if the VCS is installed, False otherwise.
     """
-    import shutil
-
     return shutil.which(repo_type) is not None
 
 
 def clone(
     repo_url: str,
     checkout: Optional[str] = None,
-    clone_to_dir: "os.PathLike[str]" = ".",
+    clone_to_dir: Union[str, os.PathLike] = ".",
     no_input: bool = False,
-):
+) -> str:
     """Clone a repo to the current directory.
 
     :param repo_url: Repo URL of unknown type.
@@ -53,9 +54,8 @@ def clone(
         cached resources.
     :returns: str with path to the new directory of the repository.
     """
-    import os
-
-    repo_type, repo_url = identify_repo(repo_url) or ("git", repo_url)
+    repo_info = identify_repo(repo_url)
+    repo_type, repo_url = repo_info if repo_info else ("git", repo_url)
 
     if not is_vcs_installed(repo_type):
         raise VCSNotInstalled(f"{repo_type} is not installed.")
