@@ -22,12 +22,12 @@ DEFAULT_CONFIG = {
 }
 
 
-def _expand_path(path):
+def _expand_path(path: str) -> str:
     """Expand both environment variables and user home in the given path."""
     return os.path.expandvars(os.path.expanduser(path))
 
 
-def merge_configs(default, overwrite):
+def merge_configs(default: dict, overwrite: dict) -> dict:
     """Recursively update a dict with the key/value pair of another.
 
     Dict values that are dictionaries themselves will be updated, whilst
@@ -42,7 +42,7 @@ def merge_configs(default, overwrite):
     return new_config
 
 
-def get_config(config_path):
+def get_config(config_path: str) -> dict:
     """Retrieve the config from the specified path, returning a config dict."""
     if not os.path.exists(config_path):
         raise ConfigDoesNotExistException(f"Config file {config_path} does not exist.")
@@ -57,7 +57,7 @@ def get_config(config_path):
     return config_dict
 
 
-def get_user_config(config_file=None, default_config=False):
+def get_user_config(config_file: str | None = None, default_config: bool | dict = False) -> dict:
     """Return the user config as a dict.
 
     If ``default_config`` is True, ignore ``config_file`` and return default
