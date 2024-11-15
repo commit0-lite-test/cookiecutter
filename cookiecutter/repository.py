@@ -47,12 +47,12 @@ def repository_has_cookiecutter_json(repo_directory: PathLike[str]) -> bool:
 def determine_repo_dir(
     template: str,
     abbreviations: dict[str, str],
-    clone_to_dir: str,
+    clone_to_dir: PathLike[str],
     checkout: str | None,
     no_input: bool,
     password: str | None = None,
     directory: str | None = None,
-) -> tuple[str, bool]:
+) -> tuple[PathLike[str], bool]:
     """Locate the repository directory from a template reference.
 
     :param template: The project template name.
