@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from jinja2.exceptions import UndefinedError
 from rich.prompt import Confirm, InvalidResponse, Prompt, PromptBase
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import cast
 from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
