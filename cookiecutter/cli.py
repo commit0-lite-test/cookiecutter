@@ -169,13 +169,13 @@ def main(
 
     try:
         if replay_file:
-            replay = replay_file
+            replay = bool(replay_file)
 
         cookiecutter(
             template=template,
             checkout=checkout,
             no_input=no_input,
-            extra_context=dict(extra_context),
+            extra_context=dict(s.split('=', 1) for s in extra_context),
             replay=replay,
             overwrite_if_exists=overwrite_if_exists,
             output_dir=output_dir,
@@ -193,4 +193,22 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    main(
+        template=None,
+        extra_context=[],
+        no_input=False,
+        checkout=None,
+        verbose=False,
+        replay=False,
+        overwrite_if_exists=False,
+        output_dir=".",
+        config_file=None,
+        default_config=False,
+        debug_file=None,
+        directory=None,
+        skip_if_file_exists=False,
+        accept_hooks="yes",
+        replay_file=None,
+        list_installed=False,
+        keep_project_on_failure=False,
+    )
