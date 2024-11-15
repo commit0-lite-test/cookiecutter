@@ -65,6 +65,7 @@ def cookiecutter(
     :param keep_project_on_failure: If `True` keep generated project directory even when
         generation fails
     """
+    project_dir = None
     try:
         # Get user config
         config_dict = get_user_config(
@@ -87,7 +88,7 @@ def cookiecutter(
             try:
                 prompt_and_delete(repo_dir, no_input=no_input)
             except SystemExit:
-                return
+                return None
 
         # Run pre-prompt hook if it exists
         if accept_hooks:
@@ -133,17 +134,12 @@ def cookiecutter(
         if replay and isinstance(context, dict):
             dump(config_dict["replay_dir"], template, context)
 
-        return project_dir if "project_dir" in locals() else None
+        return project_dir
 
     except Exception:
-        if not keep_project_on_failure:
-            if "project_dir" in locals():
-                rmtree(project_dir)
+        if not keep_project_on_failure and project_dir:
+            rmtree(project_dir)
         raise
-    finally:
-        # Ensure project_dir is defined
-        if "project_dir" not in locals():
-            project_dir = None
 
 
 class _patch_import_path_for_repo:
