@@ -8,10 +8,13 @@ import stat
 import tempfile
 from pathlib import Path
 from typing import Dict, Any, Callable
+
 try:
     from jinja2 import Extension
 except ImportError:
-    raise ImportError("jinja2 is not installed. Please install it using 'pip install jinja2'.")
+    raise ImportError(
+        "jinja2 is not installed. Please install it using 'pip install jinja2'."
+    )
 from cookiecutter.environment import StrictEnvironment
 
 logger = logging.getLogger(__name__)
