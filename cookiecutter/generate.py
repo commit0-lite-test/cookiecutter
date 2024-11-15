@@ -13,13 +13,14 @@ from binaryornot.check import is_binary
 from jinja2 import Environment
 from jinja2.exceptions import TemplateSyntaxError
 
-from cookiecutter.exceptions import ContextDecodingException
+from cookiecutter.exceptions import ContextDecodingException, FailedHookException
 from cookiecutter.utils import (
     create_env_with_context,
     make_sure_path_exists,
     rmtree,
     work_in,
 )
+from cookiecutter.hooks import run_hook
 
 logger = logging.getLogger(__name__)
 
@@ -139,7 +140,7 @@ def generate_file(
         return False
 
     # Ensure paths to rendered files are all created
-    make_sure_path_exists(os.path.dirname(outfile))
+    make_sure_path_exists(Path(os.path.dirname(outfile)))
 
     # Just copy over binary files. Don't render.
     if is_binary(infile):
@@ -189,7 +190,7 @@ def render_and_create_dir(
         logger.debug("Dir %s already exists, skipping", dir_to_create)
         return dir_to_create
 
-    make_sure_path_exists(dir_to_create)
+    make_sure_path_exists(Path(dir_to_create))
     return dir_to_create
 
 
@@ -267,7 +268,7 @@ def generate_files(
 
     if accept_hooks:
         _run_hook_from_repo_dir(
-            "pre_gen_project", repo_dir, project_dir, context, keep_project_on_failure
+            repo_dir, "pre_gen_project", project_dir, context, not keep_project_on_failure
         )
 
     with work_in(repo_dir):
@@ -296,12 +297,12 @@ def generate_files(
                     outfile = os.path.join(project_dir, outfile_rendered)
 
                     logger.debug("Copying %s to %s without rendering", infile, outfile)
-                    make_sure_path_exists(os.path.dirname(outfile))
+                    make_sure_path_exists(Path(os.path.dirname(outfile)))
                     shutil.copyfile(infile, outfile)
 
     if accept_hooks:
         _run_hook_from_repo_dir(
-            "post_gen_project", repo_dir, project_dir, context, keep_project_on_failure
+            repo_dir, "post_gen_project", project_dir, context, not keep_project_on_failure
         )
 
     return project_dir
