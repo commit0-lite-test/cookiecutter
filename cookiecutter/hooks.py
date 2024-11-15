@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Union
 
-from jinja2.exceptions import UndefinedError
+from jinja2 import UndefinedError
 from cookiecutter.exceptions import FailedHookException, UndefinedVariableInTemplate
 from cookiecutter.utils import (
     create_env_with_context,
@@ -139,9 +139,9 @@ def run_pre_prompt_hook(repo_dir: Union[str, Path]) -> Path:
 
     :param repo_dir: Project template input directory.
     """
-    temp_dir = create_tmp_repo_dir(repo_dir)
+    temp_dir = create_tmp_repo_dir(str(repo_dir))
     hook_path = find_hook("pre_prompt", os.path.join(temp_dir, "hooks"))
     if hook_path:
         logger.debug("Running pre_prompt hook")
-        run_script(hook_path, cwd=temp_dir)
+        run_script(hook_path, cwd=str(temp_dir))
     return temp_dir
