@@ -2,6 +2,7 @@
 
 import logging
 import sys
+from typing import Union
 
 LOG_LEVELS = {
     "DEBUG": logging.DEBUG,
