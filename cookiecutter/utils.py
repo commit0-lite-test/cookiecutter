@@ -7,14 +7,14 @@ import shutil
 import stat
 import tempfile
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any, Callable
 from jinja2.ext import Extension
 from cookiecutter.environment import StrictEnvironment
 
 logger = logging.getLogger(__name__)
 
 
-def force_delete(func, path, exc_info):
+def force_delete(func: Callable, path: str, exc_info: Any) -> None:
     """Error handler for `shutil.rmtree()` equivalent to `rm -rf`.
 
     Usage: `shutil.rmtree(path, onerror=force_delete)`
@@ -24,7 +24,7 @@ def force_delete(func, path, exc_info):
     func(path)
 
 
-def rmtree(path):
+def rmtree(path: str) -> None:
     """Remove a directory and all its contents. Like rm -rf on Unix.
 
     :param path: A directory path.
@@ -41,7 +41,7 @@ def make_sure_path_exists(path: "os.PathLike[str]") -> None:
 
 
 @contextlib.contextmanager
-def work_in(dirname=None):
+def work_in(dirname: str | None = None) -> Any:
     """Context manager version of os.chdir.
 
     When exited, returns to the working directory prior to entering.
@@ -55,7 +55,7 @@ def work_in(dirname=None):
         os.chdir(curdir)
 
 
-def make_executable(script_path):
+def make_executable(script_path: str) -> None:
     """Make `script_path` executable.
 
     :param script_path: The file to change
@@ -64,11 +64,11 @@ def make_executable(script_path):
     os.chmod(script_path, mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
-def simple_filter(filter_function):
+def simple_filter(filter_function: Callable) -> type:
     """Decorate a function to wrap it in a simplified jinja2 extension."""
 
     class SimpleExtension(Extension):
-        def __init__(self, environment):
+        def __init__(self, environment: Any) -> None:
             super().__init__(environment)
             environment.filters[filter_function.__name__] = filter_function
 
@@ -82,6 +82,6 @@ def create_tmp_repo_dir(repo_dir: "os.PathLike[str]") -> Path:
     return temp_dir
 
 
-def create_env_with_context(context: Dict):
+def create_env_with_context(context: Dict[str, Any]) -> StrictEnvironment:
     """Create a jinja environment using the provided context."""
     return StrictEnvironment(context=context)
