@@ -37,7 +37,7 @@ def valid_hook(hook_file: str, hook_name: str) -> bool:
     )
 
 
-def find_hook(hook_name, hooks_dir="hooks"):
+def find_hook(hook_name: str, hooks_dir: str = "hooks") -> Optional[str]:
     """Return a dict of all hook scripts provided.
 
     Must be called with the project template as the current working directory.
@@ -59,7 +59,7 @@ def find_hook(hook_name, hooks_dir="hooks"):
     return None
 
 
-def run_script(script_path, cwd="."):
+def run_script(script_path: str, cwd: str = ".") -> None:
     """Execute a script from a working directory.
 
     :param script_path: Absolute path to the script to run.
@@ -109,8 +109,12 @@ def run_hook(hook_name: str, project_dir: str, context: dict) -> None:
 
 
 def run_hook_from_repo_dir(
-    repo_dir, hook_name, project_dir, context, delete_project_on_failure
-):
+    repo_dir: str,
+    hook_name: str,
+    project_dir: str,
+    context: dict,
+    delete_project_on_failure: bool
+) -> None:
     """Run hook from repo directory, clean project directory if hook fails.
 
     :param repo_dir: Project template input directory.
