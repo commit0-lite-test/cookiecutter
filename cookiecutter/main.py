@@ -131,7 +131,7 @@ def cookiecutter(
         if replay and isinstance(context, dict):
             dump(config_dict["replay_dir"], template, context)
 
-        return project_dir if 'project_dir' in locals() else None
+        return project_dir if "project_dir" in locals() else None
 
     except Exception:
         if not keep_project_on_failure:
@@ -149,5 +149,10 @@ class _patch_import_path_for_repo:
         self._path = copy(sys.path)
         sys.path.append(str(self._repo_dir))
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_value: Optional[BaseException], traceback: Optional[TracebackType]) -> None:
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
         sys.path = self._path
