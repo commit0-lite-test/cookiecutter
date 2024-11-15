@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from jinja2.exceptions import UndefinedError
 from rich.prompt import Confirm, InvalidResponse, Prompt, PromptBase
+from typing import cast
 from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
@@ -278,7 +279,7 @@ def choose_nested_template(context: dict, repo_dir: str, no_input: bool = False)
     """
     template_options = context["cookiecutter"].get("_templates", {})
     if not template_options:
-        return repo_dir
+        return cast(str, repo_dir)
 
     if no_input:
         return os.path.join(repo_dir, next(iter(template_options.values())))
@@ -303,14 +304,14 @@ def prompt_and_delete(path: Union[str, Path], no_input: bool = False) -> bool:
 
     delete = read_user_yes_no(
         f"You've downloaded {path} before. Is it okay to delete and re-download it?",
-        "yes",
+        True,
     )
 
     if delete:
         rmtree(path)
         return True
 
-    reuse = read_user_yes_no("Do you want to re-use the existing version?", "yes")
+    reuse = read_user_yes_no("Do you want to re-use the existing version?", True)
 
     if reuse:
         return False
