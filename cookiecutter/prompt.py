@@ -4,13 +4,16 @@ import json
 import os
 import sys
 from collections import OrderedDict
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+
 from jinja2.exceptions import UndefinedError
 from rich.prompt import Confirm, InvalidResponse, Prompt, PromptBase
 from cookiecutter.exceptions import UndefinedVariableInTemplate
 from cookiecutter.utils import create_env_with_context, rmtree
 
 
-def read_user_variable(var_name, default_value, prompts=None, prefix=""):
+def read_user_variable(var_name: str, default_value: Any, prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> str:
     """Prompt user for variable and return the entered value or given default.
 
     :param str var_name: Variable of the context to query the user
@@ -39,7 +42,7 @@ class YesNoPrompt(Confirm):
         raise InvalidResponse(self.validate_error_message)
 
 
-def read_user_yes_no(var_name, default_value, prompts=None, prefix=""):
+def read_user_yes_no(var_name: str, default_value: bool, prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> bool:
     """Prompt the user to reply with 'yes' or 'no' (or equivalent values).
 
     - These input values will be converted to ``True``:
@@ -69,7 +72,7 @@ def read_repo_password(question: str) -> str:
     return Prompt.ask(question, password=True)
 
 
-def read_user_choice(var_name, options, prompts=None, prefix=""):
+def read_user_choice(var_name: str, options: List[str], prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> str:
     """Prompt the user to choose from several options for the given variable.
 
     The first item will be returned if no input happens.
@@ -116,7 +119,7 @@ class JsonPrompt(PromptBase[dict]):
             raise InvalidResponse(self.validate_error_message)
 
 
-def read_user_dict(var_name, default_value, prompts=None, prefix=""):
+def read_user_dict(var_name: str, default_value: Dict[str, Any], prompts: Optional[Dict[str, str]] = None, prefix: str = "") -> Dict[str, Any]:
     """Prompt the user to provide a dictionary of data.
 
     :param str var_name: Variable as specified in the context
@@ -182,8 +185,14 @@ def prompt_choice_for_template(key: str, options: Dict[str, Any], no_input: bool
 
 
 def prompt_choice_for_config(
-    cookiecutter_dict, env, key, options, no_input, prompts=None, prefix=""
-):
+    cookiecutter_dict: Dict[str, Any],
+    env: Any,
+    key: str,
+    options: List[str],
+    no_input: bool,
+    prompts: Optional[Dict[str, str]] = None,
+    prefix: str = ""
+) -> str:
     """Prompt user with a set of options to choose from.
 
     :param no_input: Do not prompt for user input and return the first available option.
