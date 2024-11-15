@@ -1,27 +1,42 @@
-"""
-Main entry point for the `cookiecutter` command.
+"""Main entry point for the `cookiecutter` command.
 
 The code in this module is also a good example of how to use Cookiecutter as a
 library rather than a script.
 """
+
 import logging
 import os
 import sys
 from copy import copy
 from pathlib import Path
 from cookiecutter.config import get_user_config
-from cookiecutter.exceptions import InvalidModeException
 from cookiecutter.generate import generate_context, generate_files
 from cookiecutter.hooks import run_pre_prompt_hook
-from cookiecutter.prompt import choose_nested_template, prompt_for_config
+from cookiecutter.prompt import prompt_for_config
 from cookiecutter.replay import dump, load
 from cookiecutter.repository import determine_repo_dir
 from cookiecutter.utils import rmtree
+
 logger = logging.getLogger(__name__)
 
-def cookiecutter(template, checkout=None, no_input=False, extra_context=None, replay=None, overwrite_if_exists=False, output_dir='.', config_file=None, default_config=False, password=None, directory=None, skip_if_file_exists=False, accept_hooks=True, keep_project_on_failure=False):
-    """
-    Run Cookiecutter just as if using it from the command line.
+
+def cookiecutter(
+    template,
+    checkout=None,
+    no_input=False,
+    extra_context=None,
+    replay=None,
+    overwrite_if_exists=False,
+    output_dir=".",
+    config_file=None,
+    default_config=False,
+    password=None,
+    directory=None,
+    skip_if_file_exists=False,
+    accept_hooks=True,
+    keep_project_on_failure=False,
+):
+    """Run Cookiecutter just as if using it from the command line.
 
     :param template: A directory containing a project template directory,
         or a URL to a git repository.
@@ -49,17 +64,19 @@ def cookiecutter(template, checkout=None, no_input=False, extra_context=None, re
     """
     try:
         # Get user config
-        config_dict = get_user_config(config_file=config_file, default_config=default_config)
+        config_dict = get_user_config(
+            config_file=config_file, default_config=default_config
+        )
 
         # Get the repo directory and determine if it should be cleaned up afterwards
         repo_dir, cleanup = determine_repo_dir(
             template=template,
-            abbreviations=config_dict['abbreviations'],
-            clone_to_dir=config_dict['cookiecutters_dir'],
+            abbreviations=config_dict["abbreviations"],
+            clone_to_dir=config_dict["cookiecutters_dir"],
             checkout=checkout,
             no_input=no_input,
             password=password,
-            directory=directory
+            directory=directory,
         )
 
         # If it's a repo and the repo hasn't been cleaned up, prompt the user to manually delete it
@@ -74,24 +91,24 @@ def cookiecutter(template, checkout=None, no_input=False, extra_context=None, re
             run_pre_prompt_hook(repo_dir)
 
         # Determine the context
-        context_file = os.path.join(repo_dir, 'cookiecutter.json')
+        context_file = os.path.join(repo_dir, "cookiecutter.json")
         context = generate_context(
             context_file=context_file,
-            default_context=config_dict['default_context'],
+            default_context=config_dict["default_context"],
             extra_context=extra_context,
         )
 
         # Prompt the user to manually configure at the command line.
         # If no_input is True, proceed with defaults from the JSON file.
         if not replay and not no_input:
-            context['cookiecutter'] = prompt_for_config(context)
+            context["cookiecutter"] = prompt_for_config(context)
 
         # Load context from replay file if it exists
         if replay:
-            context = load(config_dict['replay_dir'], template)
+            context = load(config_dict["replay_dir"], template)
 
         # Include template dir or url in the context dict
-        context['cookiecutter']['_template'] = template
+        context["cookiecutter"]["_template"] = template
 
         # Render the project
         project_dir = generate_files(
@@ -101,7 +118,7 @@ def cookiecutter(template, checkout=None, no_input=False, extra_context=None, re
             skip_if_file_exists=skip_if_file_exists,
             output_dir=output_dir,
             accept_hooks=accept_hooks,
-            keep_project_on_failure=keep_project_on_failure
+            keep_project_on_failure=keep_project_on_failure,
         )
 
         # Cleanup and return
@@ -110,20 +127,20 @@ def cookiecutter(template, checkout=None, no_input=False, extra_context=None, re
 
         # Dump context if replay is True
         if replay:
-            dump(config_dict['replay_dir'], template, context)
+            dump(config_dict["replay_dir"], template, context)
 
         return project_dir
 
-    except Exception as e:
+    except Exception:
         if not keep_project_on_failure:
-            if 'project_dir' in locals():
+            if "project_dir" in locals():
                 rmtree(project_dir)
         raise
 
-class _patch_import_path_for_repo:
 
-    def __init__(self, repo_dir: 'os.PathLike[str]'):
-        self._repo_dir = f'{repo_dir}' if isinstance(repo_dir, Path) else repo_dir
+class _patch_import_path_for_repo:
+    def __init__(self, repo_dir: "os.PathLike[str]"):
+        self._repo_dir = f"{repo_dir}" if isinstance(repo_dir, Path) else repo_dir
         self._path = None
 
     def __enter__(self):
