@@ -5,7 +5,9 @@ from typing import Any, Dict, List
 try:
     from jinja2 import Environment, StrictUndefined
 except ImportError:
-    print("Error: jinja2 is not installed. Please install it using 'pip install jinja2'")
+    print(
+        "Error: jinja2 is not installed. Please install it using 'pip install jinja2'"
+    )
     # You might want to raise an exception here instead of just printing
     # raise ImportError("jinja2 is not installed")
 
