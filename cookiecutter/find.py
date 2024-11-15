@@ -6,6 +6,12 @@ from pathlib import Path
 from jinja2 import Environment
 from cookiecutter.exceptions import NonTemplatedInputDirException
 
+try:
+    import jinja2
+except ImportError:
+    print("jinja2 is not installed. Please install it using 'pip install jinja2'")
+    raise
+
 logger = logging.getLogger(__name__)
 
 
