@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import click
 from cookiecutter import __version__
@@ -36,9 +36,9 @@ def list_installed_templates(
 ) -> None:
     """List installed (locally cloned) templates. Use cookiecutter --list-installed."""
     config = get_user_config(passed_config_file, default_config)
-    cookiecutters_dir = config.get("cookiecutters_dir")
-    if not os.path.exists(cookiecutters_dir):
-        click.echo(f"No templates found in {cookiecutters_dir}")
+    cookiecutters_dir: Optional[str] = config.get("cookiecutters_dir")
+    if cookiecutters_dir is None or not os.path.exists(cookiecutters_dir):
+        click.echo("No templates found")
         return
 
     template_names = [
@@ -48,7 +48,7 @@ def list_installed_templates(
     ]
 
     if not template_names:
-        click.echo(f"No templates found in {cookiecutters_dir}")
+        click.echo("No templates found")
     else:
         click.echo("Installed templates:")
         for template_name in template_names:
