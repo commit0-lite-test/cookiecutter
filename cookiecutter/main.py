@@ -47,71 +47,78 @@ def cookiecutter(template, checkout=None, no_input=False, extra_context=None, re
     :param keep_project_on_failure: If `True` keep generated project directory even when
         generation fails
     """
-    # Get user config
-    config_dict = get_user_config(config_file=config_file, default_config=default_config)
+    try:
+        # Get user config
+        config_dict = get_user_config(config_file=config_file, default_config=default_config)
 
-    # Get the repo directory and determine if it should be cleaned up afterwards
-    repo_dir, cleanup = determine_repo_dir(
-        template=template,
-        abbreviations=config_dict['abbreviations'],
-        clone_to_dir=config_dict['cookiecutters_dir'],
-        checkout=checkout,
-        no_input=no_input,
-        password=password,
-        directory=directory
-    )
+        # Get the repo directory and determine if it should be cleaned up afterwards
+        repo_dir, cleanup = determine_repo_dir(
+            template=template,
+            abbreviations=config_dict['abbreviations'],
+            clone_to_dir=config_dict['cookiecutters_dir'],
+            checkout=checkout,
+            no_input=no_input,
+            password=password,
+            directory=directory
+        )
 
-    # If it's a repo and the repo hasn't been cleaned up, prompt the user to manually delete it
-    if cleanup:
-        try:
-            prompt_and_delete(repo_dir, no_input=no_input)
-        except SystemExit:
-            return
+        # If it's a repo and the repo hasn't been cleaned up, prompt the user to manually delete it
+        if cleanup:
+            try:
+                prompt_and_delete(repo_dir, no_input=no_input)
+            except SystemExit:
+                return
 
-    # Run pre-prompt hook if it exists
-    if accept_hooks:
-        run_pre_prompt_hook(repo_dir)
+        # Run pre-prompt hook if it exists
+        if accept_hooks:
+            run_pre_prompt_hook(repo_dir)
 
-    # Determine the context
-    context_file = os.path.join(repo_dir, 'cookiecutter.json')
-    context = generate_context(
-        context_file=context_file,
-        default_context=config_dict['default_context'],
-        extra_context=extra_context,
-    )
+        # Determine the context
+        context_file = os.path.join(repo_dir, 'cookiecutter.json')
+        context = generate_context(
+            context_file=context_file,
+            default_context=config_dict['default_context'],
+            extra_context=extra_context,
+        )
 
-    # Prompt the user to manually configure at the command line.
-    # If no_input is True, proceed with defaults from the JSON file.
-    if not replay and not no_input:
-        context['cookiecutter'] = prompt_for_config(context)
+        # Prompt the user to manually configure at the command line.
+        # If no_input is True, proceed with defaults from the JSON file.
+        if not replay and not no_input:
+            context['cookiecutter'] = prompt_for_config(context)
 
-    # Load context from replay file if it exists
-    if replay:
-        context = load(config_dict['replay_dir'], template)
+        # Load context from replay file if it exists
+        if replay:
+            context = load(config_dict['replay_dir'], template)
 
-    # Include template dir or url in the context dict
-    context['cookiecutter']['_template'] = template
+        # Include template dir or url in the context dict
+        context['cookiecutter']['_template'] = template
 
-    # Render the project
-    project_dir = generate_files(
-        repo_dir=repo_dir,
-        context=context,
-        overwrite_if_exists=overwrite_if_exists,
-        skip_if_file_exists=skip_if_file_exists,
-        output_dir=output_dir,
-        accept_hooks=accept_hooks,
-        keep_project_on_failure=keep_project_on_failure
-    )
+        # Render the project
+        project_dir = generate_files(
+            repo_dir=repo_dir,
+            context=context,
+            overwrite_if_exists=overwrite_if_exists,
+            skip_if_file_exists=skip_if_file_exists,
+            output_dir=output_dir,
+            accept_hooks=accept_hooks,
+            keep_project_on_failure=keep_project_on_failure
+        )
 
-    # Cleanup and return
-    if cleanup:
-        rmtree(repo_dir)
+        # Cleanup and return
+        if cleanup:
+            rmtree(repo_dir)
 
-    # Dump context if replay is True
-    if replay:
-        dump(config_dict['replay_dir'], template, context)
+        # Dump context if replay is True
+        if replay:
+            dump(config_dict['replay_dir'], template, context)
 
-    return project_dir
+        return project_dir
+
+    except Exception as e:
+        if not keep_project_on_failure:
+            if 'project_dir' in locals():
+                rmtree(project_dir)
+        raise
 
 class _patch_import_path_for_repo:
 
