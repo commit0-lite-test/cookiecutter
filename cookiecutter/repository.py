@@ -30,8 +30,9 @@ def expand_abbreviations(template: str, abbreviations: dict[str, str]) -> str:
     :param abbreviations: A dictionary of abbreviations.
     :return: The expanded template name.
     """
-    if template in abbreviations:
-        return abbreviations[template]
+    for abbreviation, expansion in abbreviations.items():
+        if template.startswith(f"{abbreviation}:"):
+            return expansion.format(template[len(abbreviation) + 1:])
     return template
 
 

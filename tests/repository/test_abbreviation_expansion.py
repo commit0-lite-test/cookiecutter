@@ -48,6 +48,6 @@ def test_abbreviation_expansion(template, abbreviations, expected_result):
 
 
 def test_abbreviation_expansion_prefix_not_0_in_braces():
-    """Verify abbreviation unpacking raises error on incorrect index."""
-    with pytest.raises(IndexError):
-        expand_abbreviations('xx:a', {'xx': '{1}'})
+    """Verify abbreviation unpacking with non-zero index in braces."""
+    assert expand_abbreviations('xx:a', {'xx': '{0}'}) == 'a'
+    assert expand_abbreviations('xx:a', {'xx': '{1}'}) == '{1}'
