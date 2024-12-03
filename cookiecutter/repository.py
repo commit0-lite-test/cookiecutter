@@ -103,14 +103,20 @@ def determine_repo_dir(
 
     if not os.path.exists(repo_dir):
         raise RepositoryNotFound(
-            f'A valid repository for "{template}" could not be found in the following '
-            f'locations:\n{template}\n{repo_dir}'
+            'A valid repository for "{}" could not be found in the following '
+            'locations:\n{}'.format(
+                template,
+                '\n'.join([template, repo_dir])
+            )
         )
 
     if not repository_has_cookiecutter_json(repo_dir):
         raise RepositoryNotFound(
-            f'A valid repository for "{template}" could not be found in the following '
-            f'locations:\n{template}\n{repo_dir}'
+            'A valid repository for "{}" could not be found in the following '
+            'locations:\n{}'.format(
+                template,
+                '\n'.join([template, repo_dir])
+            )
         )
 
     return repo_dir, cleanup
