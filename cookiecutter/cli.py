@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any, Union, Type
 import click
 from cookiecutter import __version__
 from cookiecutter.config import get_user_config
+from cookiecutter.config import get_user_config
 from cookiecutter.exceptions import CookiecutterException, RepositoryNotFound
 from cookiecutter.log import configure_logger
 from cookiecutter.main import cookiecutter
