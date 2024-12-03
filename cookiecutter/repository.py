@@ -3,6 +3,7 @@
 import os
 import re
 from os import PathLike
+from pathlib import Path
 from cookiecutter.exceptions import RepositoryNotFound
 from cookiecutter.vcs import clone
 from cookiecutter.zipfile import unzip
