@@ -88,6 +88,14 @@ def determine_repo_dir(
             password=password,
         )
         cleanup = True
+    elif is_repo_url(template):
+        repo_dir = clone(
+            template,
+            checkout=checkout,
+            clone_to_dir=clone_to_dir,
+            no_input=no_input,
+        )
+        cleanup = True
     else:
         repo_dir = template
         cleanup = False
@@ -97,8 +105,8 @@ def determine_repo_dir(
 
     if not repository_has_cookiecutter_json(repo_dir):
         raise RepositoryNotFound(
-            f"A valid repository for '{template}' could not be found in the following "
-            f"locations:\n{repo_dir}"
+            f'A valid repository for "{template}" could not be found in the following '
+            f'locations:\n{repo_dir}'
         )
 
     return repo_dir, cleanup
