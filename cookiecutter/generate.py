@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, Union
 
 from binaryornot.check import is_binary
-from jinja2 import Environment
+from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateSyntaxError
 
 from cookiecutter.exceptions import ContextDecodingException, FailedHookException
