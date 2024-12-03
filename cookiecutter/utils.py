@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, Any, Callable
 
-from jinja2 import Extension
+from jinja2.ext import Extension
 from cookiecutter.environment import StrictEnvironment
 
 logger = logging.getLogger(__name__)
