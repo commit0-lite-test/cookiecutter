@@ -9,14 +9,9 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, Union
 
-try:
-    from binaryornot.check import is_binary
-    from jinja2 import Environment
-    from jinja2.exceptions import TemplateSyntaxError
-except ImportError as e:
-    raise ImportError(
-        "jinja2 is not installed. Please install it using 'pip install jinja2'."
-    ) from e
+from binaryornot.check import is_binary
+from jinja2 import Environment
+from jinja2.exceptions import TemplateSyntaxError
 
 from cookiecutter.exceptions import ContextDecodingException, FailedHookException
 from cookiecutter.utils import (
