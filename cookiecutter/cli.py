@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any, Union, Type
 
 import click
 from jinja2 import FileSystemLoader
