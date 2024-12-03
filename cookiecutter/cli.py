@@ -55,6 +55,8 @@ def list_installed_templates(
             click.echo(f"  {template_name}")
 
 
+import click
+
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.version_option(__version__, "-V", "--version", message=version_msg())
 @click.argument("template", required=False)
@@ -125,10 +127,6 @@ def list_installed_templates(
     default="yes",
     help="Accept pre/post hooks",
 )
-def prompt_accept_hooks(accept_hooks, value):
-    if accept_hooks == "ask":
-        return click.confirm("Do you want to accept hooks?", default=True)
-    return accept_hooks == "yes"
 @click.option(
     "-l", "--list-installed", is_flag=True, help="List currently installed templates."
 )
@@ -156,6 +154,11 @@ def main(
     list_installed: bool,
     keep_project_on_failure: bool,
 ) -> None:
+    def prompt_accept_hooks(accept_hooks, value):
+        if accept_hooks == "ask":
+            return click.confirm("Do you want to accept hooks?", default=True)
+        return accept_hooks == "yes"
+
     accept_hooks_value = prompt_accept_hooks(accept_hooks, verbose)
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
