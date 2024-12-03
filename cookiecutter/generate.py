@@ -245,8 +245,11 @@ def generate_files(
     context = context or {}
     env = create_env_with_context(context)
 
+    # Use a default value for _template if it's not present
+    template = context.get("cookiecutter", {}).get("_template", "{{cookiecutter.repo_dir}}")
+    
     project_dir = render_and_create_dir(
-        context["cookiecutter"]["_template"],
+        template,
         context,
         output_dir,
         env,
