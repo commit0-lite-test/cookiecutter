@@ -13,8 +13,12 @@ try:
     from binaryornot.check import is_binary
     from jinja2 import Environment
     from jinja2.exceptions import TemplateSyntaxError
-except ImportError:
-    pass  # These imports will be handled by the installation command
+except ImportError as e:
+    raise ImportError(
+        "Required dependencies are not installed. "
+        "Please install them using 'pip install cookiecutter[test]'. "
+        f"Original error: {e}"
+    ) from e
 
 from cookiecutter.exceptions import ContextDecodingException, FailedHookException
 from cookiecutter.utils import (
