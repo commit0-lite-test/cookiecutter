@@ -15,9 +15,7 @@ try:
     from jinja2.exceptions import TemplateSyntaxError
 except ImportError as e:
     raise ImportError(
-        "Required dependencies are not installed. "
-        "Please install them using 'pip install cookiecutter[test]'. "
-        f"Original error: {e}"
+        "jinja2 is not installed. Please install it using 'pip install jinja2'."
     ) from e
 
 from cookiecutter.exceptions import ContextDecodingException, FailedHookException
