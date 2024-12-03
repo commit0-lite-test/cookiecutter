@@ -7,7 +7,7 @@ import os
 import shutil
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Optional
 
 from binaryornot.check import is_binary
 from jinja2 import Environment, FileSystemLoader
@@ -66,8 +66,8 @@ def apply_overwrites_to_context(
 
 def generate_context(
     context_file: str = "cookiecutter.json",
-    default_context: Dict[str, Any] | None = None,
-    extra_context: Dict[str, Any] | None = None,
+    default_context: Optional[Dict[str, Any]] = None,
+    extra_context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Generate the context for a Cookiecutter project template.
 
