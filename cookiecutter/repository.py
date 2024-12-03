@@ -48,7 +48,8 @@ def repository_has_cookiecutter_json(repo_directory: PathLike[str]) -> bool:
     :param repo_directory: The candidate repository directory.
     :return: True if the `repo_directory` is valid, else False.
     """
-    return os.path.exists(os.path.join(repo_directory, "cookiecutter.json"))
+    repo_dir = Path(repo_directory)
+    return (repo_dir / "cookiecutter.json").is_file()
 
 
 def determine_repo_dir(
@@ -88,25 +89,22 @@ def determine_repo_dir(
             password=password,
         )
         cleanup = True
-    elif is_repo_url(template):
-        repo_dir = clone(
-            template,
-            checkout=checkout,
-            clone_to_dir=clone_to_dir,
-            no_input=no_input,
-        )
-        cleanup = True
     else:
-        repo_dir = template
+        repo_dir = os.path.join(clone_to_dir, template)
         cleanup = False
 
     if directory:
         repo_dir = os.path.join(repo_dir, directory)
 
+    if not os.path.exists(repo_dir):
+        raise RepositoryNotFound(
+            f'The repository directory "{repo_dir}" does not exist.'
+        )
+
     if not repository_has_cookiecutter_json(repo_dir):
         raise RepositoryNotFound(
             f'A valid repository for "{template}" could not be found in the following '
-            f'locations:\n{repo_dir}'
+            f'location:\n{repo_dir}'
         )
 
     return repo_dir, cleanup
