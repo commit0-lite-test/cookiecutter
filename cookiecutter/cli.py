@@ -7,6 +7,8 @@ from typing import List, Optional, Dict, Any, Union
 import click
 from jinja2 import FileSystemLoader
 from cookiecutter.environment import StrictEnvironment
+from jinja2 import FileSystemLoader
+from cookiecutter.environment import StrictEnvironment
 from cookiecutter import __version__
 from cookiecutter.config import get_user_config
 from cookiecutter.exceptions import CookiecutterException, RepositoryNotFound
