@@ -142,7 +142,6 @@ def prompt_accept_hooks(accept_hooks: str) -> bool:
     return accept_hooks == "yes"
 
 def main(
-    ctx: click.Context,
     template: Optional[str] = None,
     extra_context: List[str] = [],
     no_input: bool = False,
