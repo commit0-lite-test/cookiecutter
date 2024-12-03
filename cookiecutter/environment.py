@@ -22,7 +22,6 @@ class ExtensionLoaderMixin:
     """
 
     def __init__(self, **kwargs: Any) -> None:
-        self.extensions = []
         """Initialize the Jinja2 Environment object while loading extensions.
 
         Does the following:
@@ -40,9 +39,9 @@ class ExtensionLoaderMixin:
             "cookiecutter.extensions.UUIDExtension",
         ]
         extensions = default_extensions + self._read_extensions(context)
+        kwargs['extensions'] = extensions
         try:
             super().__init__(**kwargs)
-            self.extensions.extend(extensions)
         except ImportError as err:
             raise UnknownExtension(f"Unable to load extension: {err}") from err
 
@@ -69,3 +68,4 @@ class StrictEnvironment(ExtensionLoaderMixin, Environment):
         Also loading extensions defined in cookiecutter.json's _extensions key.
         """
         super().__init__(undefined=StrictUndefined, **kwargs)
+        self.extensions = []  # Initialize extensions as a list
