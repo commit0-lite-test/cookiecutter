@@ -5,7 +5,7 @@ import sys
 from typing import List, Optional
 
 import click
-from typing import List
+from typing import List, Optional
 from typing import Any, Dict, Optional
 from jinja2 import FileSystemLoader
 from cookiecutter.environment import StrictEnvironment
@@ -141,6 +141,11 @@ import click
     is_flag=True,
     help="Do not delete project folder on failure",
 )
+
+def prompt_accept_hooks(ctx: click.Context, accept_hooks: str) -> bool:
+    if accept_hooks == "ask":
+        return click.confirm("Do you want to accept hooks?", default=True)
+    return accept_hooks == "yes"
 def prompt_accept_hooks(ctx: click.Context, accept_hooks: str) -> bool:
     if accept_hooks == "ask":
         return click.confirm("Do you want to accept hooks?", default=True)
