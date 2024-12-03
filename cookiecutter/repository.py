@@ -91,7 +91,11 @@ def determine_repo_dir(
         )
         cleanup = True
     else:
-        repo_dir = os.path.join(clone_to_dir, template)
+        # Check if the template exists at the original location
+        if os.path.exists(template):
+            repo_dir = template
+        else:
+            repo_dir = os.path.join(clone_to_dir, template)
         cleanup = False
 
     if directory:
@@ -100,7 +104,7 @@ def determine_repo_dir(
     if not os.path.exists(repo_dir):
         raise RepositoryNotFound(
             f'A valid repository for "{template}" could not be found in the following '
-            f'locations:\n{os.path.join(template, directory) if directory else template}\n{repo_dir}'
+            f'locations:\n{template}\n{repo_dir}'
         )
 
     if not repository_has_cookiecutter_json(repo_dir):
