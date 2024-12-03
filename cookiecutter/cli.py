@@ -5,7 +5,7 @@ import sys
 from typing import List, Optional
 
 import click
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from cookiecutter import __version__
 from cookiecutter.config import get_user_config
 from cookiecutter.exceptions import CookiecutterException, RepositoryNotFound
