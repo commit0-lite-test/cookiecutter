@@ -125,6 +125,10 @@ def list_installed_templates(
     default="yes",
     help="Accept pre/post hooks",
 )
+def prompt_accept_hooks(accept_hooks, value):
+    if accept_hooks == "ask":
+        return click.confirm("Do you want to accept hooks?", default=True)
+    return accept_hooks == "yes"
 @click.option(
     "-l", "--list-installed", is_flag=True, help="List currently installed templates."
 )
@@ -152,6 +156,7 @@ def main(
     list_installed: bool,
     keep_project_on_failure: bool,
 ) -> None:
+    accept_hooks_value = prompt_accept_hooks(accept_hooks, verbose)
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
     Cookiecutter is free and open source software, developed and managed by
@@ -172,10 +177,10 @@ def main(
             replay = bool(replay_file)
 
         cookiecutter(
-            template=template,
+            template,
             checkout=checkout,
             no_input=no_input,
-            extra_context=dict(s.split('=', 1) for s in extra_context),
+            extra_context=dict(s.split('=', 1) for s in extra_context) if extra_context else None,
             replay=replay,
             overwrite_if_exists=overwrite_if_exists,
             output_dir=output_dir,
@@ -184,7 +189,7 @@ def main(
             password=None,
             directory=directory,
             skip_if_file_exists=skip_if_file_exists,
-            accept_hooks=accept_hooks == "yes",
+            accept_hooks=accept_hooks_value,
             keep_project_on_failure=keep_project_on_failure,
         )
     except (CookiecutterException, RepositoryNotFound) as e:
