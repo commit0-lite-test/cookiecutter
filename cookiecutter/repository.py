@@ -82,7 +82,7 @@ def determine_repo_dir(
     elif is_zip_file(template):
         repo_dir = unzip(
             template,
-            is_url=False,
+            is_url=True,
             clone_to_dir=clone_to_dir,
             no_input=no_input,
             password=password,
@@ -97,9 +97,8 @@ def determine_repo_dir(
 
     if not repository_has_cookiecutter_json(repo_dir):
         raise RepositoryNotFound(
-            "The repository {} does not contain a cookiecutter.json file".format(
-                repo_dir
-            )
+            f"A valid repository for '{template}' could not be found in the following "
+            f"locations:\n{repo_dir}"
         )
 
     return repo_dir, cleanup

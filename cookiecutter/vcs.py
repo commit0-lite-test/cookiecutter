@@ -88,6 +88,7 @@ def clone(
             if checkout:
                 subprocess.check_output(["hg", "update", checkout], cwd=repo_dir)
     except subprocess.CalledProcessError as error:
+        rmtree(repo_dir)
         raise RepositoryCloneFailed(error) from error
 
     return repo_dir
