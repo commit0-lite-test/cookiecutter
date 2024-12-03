@@ -61,6 +61,7 @@ import click
 @click.version_option(__version__, "-V", "--version", message=version_msg())
 @click.argument("template", required=False)
 @click.argument("extra_context", nargs=-1, callback=validate_extra_context)
+@click.pass_context
 @click.option(
     "--no-input",
     is_flag=True,
@@ -141,6 +142,7 @@ def prompt_accept_hooks(accept_hooks: str) -> bool:
     return accept_hooks == "yes"
 
 def main(
+    ctx: click.Context,
     template: Optional[str] = None,
     extra_context: List[str] = [],
     no_input: bool = False,
@@ -158,7 +160,6 @@ def main(
     replay_file: Optional[str] = None,
     list_installed: bool = False,
     keep_project_on_failure: bool = False,
-    prog_name: Optional[str] = None,
 ) -> None:
     accept_hooks_value = prompt_accept_hooks(accept_hooks)
     """Create a project from a Cookiecutter project template (TEMPLATE).
