@@ -135,6 +135,11 @@ import click
     is_flag=True,
     help="Do not delete project folder on failure",
 )
+def prompt_accept_hooks(accept_hooks: str) -> bool:
+    if accept_hooks == "ask":
+        return click.confirm("Do you want to accept hooks?", default=True)
+    return accept_hooks == "yes"
+
 def main(
     template: Optional[str],
     extra_context: List[str],
@@ -154,12 +159,7 @@ def main(
     list_installed: bool,
     keep_project_on_failure: bool,
 ) -> None:
-    def prompt_accept_hooks(accept_hooks, value):
-        if accept_hooks == "ask":
-            return click.confirm("Do you want to accept hooks?", default=True)
-        return accept_hooks == "yes"
-
-    accept_hooks_value = prompt_accept_hooks(accept_hooks, verbose)
+    accept_hooks_value = prompt_accept_hooks(accept_hooks)
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
     Cookiecutter is free and open source software, developed and managed by
@@ -194,6 +194,7 @@ def main(
             skip_if_file_exists=skip_if_file_exists,
             accept_hooks=accept_hooks_value,
             keep_project_on_failure=keep_project_on_failure,
+            replay_file=replay_file,
         )
     except (CookiecutterException, RepositoryNotFound) as e:
         click.echo(f"Error: {e}")
@@ -201,22 +202,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main(
-        template=None,
-        extra_context=[],
-        no_input=False,
-        checkout=None,
-        verbose=False,
-        replay=False,
-        overwrite_if_exists=False,
-        output_dir=".",
-        config_file=None,
-        default_config=False,
-        debug_file=None,
-        directory=None,
-        skip_if_file_exists=False,
-        accept_hooks="yes",
-        replay_file=None,
-        list_installed=False,
-        keep_project_on_failure=False,
-    )
+    main()
