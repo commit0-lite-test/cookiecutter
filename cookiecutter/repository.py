@@ -100,7 +100,7 @@ def determine_repo_dir(
     if not os.path.exists(repo_dir):
         raise RepositoryNotFound(
             f'A valid repository for "{template}" could not be found in the following '
-            f'locations:\n{repo_dir}'
+            f'locations:\n{os.path.join(template, directory) if directory else template}\n{repo_dir}'
         )
 
     if not repository_has_cookiecutter_json(repo_dir):
