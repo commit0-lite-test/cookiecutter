@@ -63,6 +63,7 @@ import click
 @click.argument("template", required=False)
 @click.argument("extra_context", nargs=-1, callback=validate_extra_context)
 @click.pass_context
+@click.pass_context
 @click.option(
     "--no-input",
     is_flag=True,
@@ -137,12 +138,13 @@ import click
     is_flag=True,
     help="Do not delete project folder on failure",
 )
-def prompt_accept_hooks(accept_hooks: str) -> bool:
+def prompt_accept_hooks(ctx: click.Context, accept_hooks: str) -> bool:
     if accept_hooks == "ask":
         return click.confirm("Do you want to accept hooks?", default=True)
     return accept_hooks == "yes"
 
 def main(
+    ctx: click.Context,
     template: Optional[str] = None,
     extra_context: List[str] = [],
     no_input: bool = False,
@@ -161,7 +163,7 @@ def main(
     list_installed: bool = False,
     keep_project_on_failure: bool = False,
 ) -> None:
-    accept_hooks_value = prompt_accept_hooks(accept_hooks)
+    accept_hooks_value = prompt_accept_hooks(ctx, accept_hooks)
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
     Cookiecutter is free and open source software, developed and managed by
