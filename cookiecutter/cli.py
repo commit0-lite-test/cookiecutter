@@ -5,6 +5,7 @@ import sys
 from typing import List, Optional
 
 import click
+from typing import List
 from typing import Any, Dict, Optional
 from jinja2 import FileSystemLoader
 from cookiecutter.environment import StrictEnvironment
