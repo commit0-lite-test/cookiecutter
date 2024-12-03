@@ -42,7 +42,10 @@ class ExtensionLoaderMixin:
         kwargs['extensions'] = extensions
         try:
             super().__init__(**kwargs)
-            self.extensions = {ext.__name__: ext for ext in self.extensions}
+            self.extensions = {
+                ext if isinstance(ext, str) else ext.__name__: ext
+                for ext in self.extensions
+            }
         except ImportError as err:
             raise UnknownExtension(f"Unable to load extension: {err}") from err
 
@@ -69,8 +72,12 @@ class StrictEnvironment(ExtensionLoaderMixin, Environment):
         Also loading extensions defined in cookiecutter.json's _extensions key.
         """
         super().__init__(undefined=StrictUndefined, **kwargs)
-        self.extensions = {}  # Initialize extensions as a dictionary
+        if not hasattr(self, 'extensions'):
+            self.extensions = {}  # Initialize extensions as a dictionary
 
     def iter_extensions(self):
         """Iterates over the extensions by priority."""
-        return iter(sorted(self.extensions.values(), key=lambda x: x.priority))
+        return iter(sorted(
+            [ext for ext in self.extensions.values() if hasattr(ext, 'priority')],
+            key=lambda x: x.priority
+        ))
