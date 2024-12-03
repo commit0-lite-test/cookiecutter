@@ -83,6 +83,8 @@ def create_tmp_repo_dir(repo_dir: "os.PathLike[str]") -> Path:
     return temp_dir
 
 
-def create_env_with_context(context: Dict[str, Any]) -> StrictEnvironment:
+from jinja2 import FileSystemLoader
+
+def create_env_with_context(context: Dict[str, Any], loader: Optional[FileSystemLoader] = None) -> StrictEnvironment:
     """Create a jinja environment using the provided context."""
-    return StrictEnvironment(context=context)
+    return StrictEnvironment(context=context, loader=loader)

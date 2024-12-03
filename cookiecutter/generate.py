@@ -243,7 +243,7 @@ def generate_files(
         generation fails
     """
     context = context or {}
-    env = create_env_with_context(context)
+    env = create_env_with_context(context, loader=FileSystemLoader(repo_dir))
 
     # Use a default value for _template if it's not present
     template = context.get("cookiecutter", {}).get("_template", "{{cookiecutter.repo_dir}}")

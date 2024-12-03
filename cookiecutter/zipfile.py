@@ -60,7 +60,13 @@ def unzip(
 
         # Move the extracted contents to the clone_to_dir
         for item in extracted_dir.iterdir():
-            shutil.move(str(item), str(clone_to_dir))
+            dest = clone_to_dir / item.name
+            if dest.exists():
+                if dest.is_dir():
+                    shutil.rmtree(dest)
+                else:
+                    dest.unlink()
+            shutil.move(str(item), str(dest))
 
     # Clean up the downloaded zip file if it was from a URL
     if is_url:

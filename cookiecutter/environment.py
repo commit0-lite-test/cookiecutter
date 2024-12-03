@@ -3,7 +3,7 @@
 from typing import Any, Dict, List
 
 try:
-    from jinja2 import Environment, StrictUndefined
+    from jinja2 import Environment, StrictUndefined, FileSystemLoader
 except ImportError:
     print(
         "Error: jinja2 is not installed. Please install it using 'pip install jinja2'"
@@ -71,7 +71,10 @@ class StrictEnvironment(ExtensionLoaderMixin, Environment):
 
         Also loading extensions defined in cookiecutter.json's _extensions key.
         """
-        super().__init__(undefined=StrictUndefined, **kwargs)
+        loader = kwargs.pop('loader', None)
+        if loader is None:
+            loader = FileSystemLoader('.')
+        super().__init__(undefined=StrictUndefined, loader=loader, **kwargs)
         if not hasattr(self, 'extensions'):
             self.extensions = {}  # Initialize extensions as a dictionary
 
