@@ -2,11 +2,9 @@
 
 import os
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 import click
-from typing import List, Optional
-from typing import Any, Dict, Optional
 from jinja2 import FileSystemLoader
 from cookiecutter.environment import StrictEnvironment
 from cookiecutter import __version__
