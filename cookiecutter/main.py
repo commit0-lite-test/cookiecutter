@@ -17,7 +17,7 @@ from cookiecutter.replay import dump, load
 from cookiecutter.repository import determine_repo_dir
 from cookiecutter.utils import rmtree
 from cookiecutter.prompt import prompt_and_delete
-from typing import Optional, Dict, Any, Union, Type
+from typing import Optional, Dict, Any, Union, Type, List
 from types import TracebackType
 
 logger = logging.getLogger(__name__)
