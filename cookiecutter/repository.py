@@ -82,7 +82,7 @@ def determine_repo_dir(
     elif is_zip_file(template):
         repo_dir = unzip(
             template,
-            is_url=True,
+            is_url=is_repo_url(template),
             clone_to_dir=clone_to_dir,
             no_input=no_input,
             password=password,
