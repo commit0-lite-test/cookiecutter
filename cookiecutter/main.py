@@ -38,6 +38,7 @@ def cookiecutter(
     skip_if_file_exists: bool = False,
     accept_hooks: bool = True,
     keep_project_on_failure: bool = False,
+    replay_file: Optional[str] = None,
 ) -> Optional[str]:
     """Run Cookiecutter just as if using it from the command line.
 
@@ -109,7 +110,10 @@ def cookiecutter(
 
         # Load context from replay file if it exists
         if replay:
-            context = load(config_dict["replay_dir"], template)
+            if replay_file:
+                context = load(Path(replay_file).parent, Path(replay_file).name)
+            else:
+                context = load(config_dict["replay_dir"], template)
 
         # Include template dir or url in the context dict
         if isinstance(context, dict) and isinstance(context.get("cookiecutter"), dict):
